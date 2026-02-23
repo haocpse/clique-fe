@@ -1,4 +1,4 @@
 // Custom React hooks
 // Export all hooks from this barrel file
 
-export {}
+export { useAuth } from "./useAuth";

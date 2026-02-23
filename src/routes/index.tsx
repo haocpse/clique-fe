@@ -2,6 +2,13 @@ import { createBrowserRouter } from "react-router-dom";
 import MainLayout from "@/layouts/MainLayout";
 import HomePage from "@/pages/Home";
 import Login from "@/pages/Login";
+import Register from "@/pages/Register";
+import CreateProfile from "@/pages/Profile/CreateProfile";
+import EditProfile from "@/pages/Profile/EditProfile";
+import MyProfile from "@/pages/Profile/MyProfile";
+import NotFoundPage from "@/pages/NotFound";
+import ProtectedRoute from "@/components/common/ProtectedRoute";
+import GuestRoute from "@/components/common/GuestRoute";
 
 export const router = createBrowserRouter([
   {
@@ -14,6 +21,46 @@ export const router = createBrowserRouter([
   },
   {
     path: "/login",
-    element: <Login />,
+    element: (
+      <GuestRoute>
+        <Login />
+      </GuestRoute>
+    ),
+  },
+  {
+    path: "/register",
+    element: (
+      <GuestRoute>
+        <Register />
+      </GuestRoute>
+    ),
+  },
+  {
+    path: "/profile/create",
+    element: (
+      <ProtectedRoute>
+        <CreateProfile />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/profile/edit",
+    element: (
+      <ProtectedRoute>
+        <EditProfile />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/profile/me",
+    element: (
+      <ProtectedRoute>
+        <MyProfile />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "*",
+    element: <NotFoundPage />,
   },
 ]);

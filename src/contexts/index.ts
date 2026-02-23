@@ -1,4 +1,4 @@
 // React Context providers
 // Export all contexts from this barrel file
 
-export {}
+export { AuthProvider, AuthContext } from "./AuthContext";

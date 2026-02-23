@@ -1,6 +1,10 @@
-// Authentication service
-// Handles login, register, logout, token refresh, etc.
+import axiosClient from "./api";
+import type { LoginRequest, RegisterRequest, ApiResponse } from "@/types";
 
 export const authService = {
-  // TODO: implement auth methods
-}
+  login: (data: LoginRequest) =>
+    axiosClient.post<ApiResponse<string>>("/auth/login", data),
+
+  register: (data: RegisterRequest) =>
+    axiosClient.post<ApiResponse<string>>("/auth/register", data),
+};

@@ -1,10 +1,42 @@
 import { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import styles from "./Login.module.css";
 import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
+import { useAuth } from "@/hooks/useAuth";
+import { ROUTES } from "@/constants";
 
 const Login = () => {
+  const navigate = useNavigate();
+  const { login } = useAuth();
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+
+    if (!email.trim() || !password.trim()) {
+      setError("Please enter email and password.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      await login({ email, password });
+      navigate(ROUTES.PROFILE_ME);
+    } catch (err: any) {
+      const msg =
+        err.response?.data?.message || "Login failed. Please try again.";
+      setError(msg);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <>
@@ -16,6 +48,8 @@ const Login = () => {
           <p className={styles.subtitle}>
             Welcome back to the elite social circle.
           </p>
+
+          {error && <div className={styles.error}>{error}</div>}
 
           {/* Social Login */}
           <div className={styles.socialRow}>
@@ -56,7 +90,7 @@ const Login = () => {
           </div>
 
           {/* Form */}
-          <form onSubmit={(e) => e.preventDefault()}>
+          <form onSubmit={handleSubmit}>
             <div className={styles.inputGroup}>
               <input
                 type="email"
@@ -64,6 +98,8 @@ const Login = () => {
                 placeholder="Email Address"
                 id="login-email"
                 autoComplete="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
             </div>
 
@@ -75,6 +111,8 @@ const Login = () => {
                   placeholder="Password"
                   id="login-password"
                   autoComplete="current-password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
                 <button
                   type="button"
@@ -126,14 +164,15 @@ const Login = () => {
               type="submit"
               className={styles.loginBtn}
               id="login-submit-btn"
+              disabled={loading}
             >
-              Login
+              {loading ? "Signing In..." : "Login"}
             </button>
           </form>
 
           {/* Footer */}
           <div className={styles.footer}>
-            Not a member? <a href="#">Join Now</a>
+            Not a member? <Link to={ROUTES.REGISTER}>Join Now</Link>
           </div>
         </div>
       </div>

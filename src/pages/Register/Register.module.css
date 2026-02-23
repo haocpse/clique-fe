@@ -1,4 +1,4 @@
-.loginWrapper {
+.registerWrapper {
   min-height: 100vh;
   display: flex;
   align-items: center;
@@ -7,7 +7,7 @@
   padding: 1rem;
 }
 
-.loginCard {
+.registerCard {
   width: 100%;
   max-width: 480px;
   background: linear-gradient(
@@ -40,69 +40,6 @@
   text-align: center;
   margin: 0 0 2rem;
   font-weight: 400;
-}
-
-/* Social buttons row */
-.socialRow {
-  display: flex;
-  gap: 0.75rem;
-  margin-bottom: 1.75rem;
-}
-
-.socialBtn {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.6rem;
-  padding: 0.8rem 1rem;
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(255, 255, 255, 0.04);
-  color: #ffffff;
-  font-family: "Plus Jakarta Sans", sans-serif;
-  font-size: 0.8rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: all 200ms ease;
-}
-
-.socialBtn:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.2);
-}
-
-.socialIcon {
-  width: 18px;
-  height: 18px;
-  display: flex;
-  align-items: center;
-}
-
-/* Divider */
-.divider {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 1.75rem;
-}
-
-.dividerLine {
-  flex: 1;
-  height: 1px;
-  background: rgba(255, 255, 255, 0.1);
-}
-
-.dividerText {
-  font-family: "Plus Jakarta Sans", sans-serif;
-  font-size: 0.7rem;
-  font-weight: 500;
-  letter-spacing: 0.15em;
-  color: rgba(255, 255, 255, 0.35);
-  text-transform: uppercase;
-  white-space: nowrap;
 }
 
 /* Form fields */
@@ -157,29 +94,8 @@
   color: rgba(255, 255, 255, 0.6);
 }
 
-/* Forgot password */
-.forgotRow {
-  text-align: right;
-  margin-bottom: 1.5rem;
-}
-
-.forgotLink {
-  font-family: "Plus Jakarta Sans", sans-serif;
-  font-size: 0.7rem;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.45);
-  text-decoration: none;
-  transition: color 200ms ease;
-}
-
-.forgotLink:hover {
-  color: rgb(243, 206, 131);
-}
-
-/* Login button */
-.loginBtn {
+/* Submit button */
+.registerBtn {
   width: 100%;
   padding: 0.95rem;
   border: none;
@@ -197,10 +113,11 @@
   text-transform: uppercase;
   cursor: pointer;
   transition: all 250ms ease;
+  margin-top: 0.5rem;
   margin-bottom: 1.75rem;
 }
 
-.loginBtn:hover {
+.registerBtn:hover {
   background: linear-gradient(
     135deg,
     rgb(250, 215, 145) 0%,
@@ -210,11 +127,11 @@
   transform: translateY(-1px);
 }
 
-.loginBtn:active {
+.registerBtn:active {
   transform: translateY(0);
 }
 
-.loginBtn:disabled {
+.registerBtn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
   transform: none;
