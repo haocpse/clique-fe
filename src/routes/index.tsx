@@ -1,23 +1,19 @@
-// Application routes configuration
+import { createBrowserRouter } from "react-router-dom";
+import MainLayout from "@/layouts/MainLayout";
+import HomePage from "@/pages/Home";
+import Login from "@/pages/Login";
 
-// TODO: Install react-router-dom and configure routes
-// npm install react-router-dom
-
-// Example route config:
-// import { createBrowserRouter } from 'react-router-dom'
-// import HomePage from '@/pages/Home'
-// import NotFoundPage from '@/pages/NotFound'
-// import MainLayout from '@/layouts/MainLayout'
-//
-// export const router = createBrowserRouter([
-//   {
-//     path: '/',
-//     element: <MainLayout><HomePage /></MainLayout>,
-//   },
-//   {
-//     path: '*',
-//     element: <NotFoundPage />,
-//   },
-// ])
-
-export {}
+export const router = createBrowserRouter([
+  {
+    path: "/",
+    element: (
+      <MainLayout>
+        <HomePage />
+      </MainLayout>
+    ),
+  },
+  {
+    path: "/login",
+    element: <Login />,
+  },
+]);

@@ -1,13 +1,9 @@
-import '@/styles/global.css'
-import MainLayout from '@/layouts/MainLayout'
-import HomePage from '@/pages/Home'
+import "@/styles/global.css";
+import { RouterProvider } from "react-router-dom";
+import { router } from "@/routes";
 
 function App() {
-  return (
-    <MainLayout>
-      <HomePage />
-    </MainLayout>
-  )
+  return <RouterProvider router={router} />;
 }
 
-export default App
+export default App;
