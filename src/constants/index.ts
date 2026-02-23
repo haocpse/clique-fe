@@ -6,6 +6,7 @@ export const ROUTES = {
   HOME: "/",
   LOGIN: "/login",
   REGISTER: "/register",
+  DISCOVER: "/discover",
   PROFILE_CREATE: "/profile/create",
   PROFILE_EDIT: "/profile/edit",
   PROFILE_ME: "/profile/me",

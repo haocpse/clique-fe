@@ -6,6 +6,7 @@ import Register from "@/pages/Register";
 import CreateProfile from "@/pages/Profile/CreateProfile";
 import EditProfile from "@/pages/Profile/EditProfile";
 import MyProfile from "@/pages/Profile/MyProfile";
+import Discover from "@/pages/Discover";
 import NotFoundPage from "@/pages/NotFound";
 import ProtectedRoute from "@/components/common/ProtectedRoute";
 import GuestRoute from "@/components/common/GuestRoute";
@@ -56,6 +57,14 @@ export const router = createBrowserRouter([
     element: (
       <ProtectedRoute>
         <MyProfile />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/discover",
+    element: (
+      <ProtectedRoute>
+        <Discover />
       </ProtectedRoute>
     ),
   },

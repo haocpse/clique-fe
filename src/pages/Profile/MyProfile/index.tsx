@@ -66,7 +66,10 @@ const MyProfile = () => {
 
   const profile = profileData?.profile;
   const photos = profileData?.photos ?? [];
-  const primaryPhoto = photos.find((p) => p.isPrimary) || photos[0];
+  const sortedPhotos = [...photos].sort(
+    (a, b) => a.displayOrder - b.displayOrder,
+  );
+  const primaryPhoto = sortedPhotos[0];
 
   const initial =
     profile?.firstName?.charAt(0)?.toUpperCase() ||
@@ -165,7 +168,7 @@ const MyProfile = () => {
           <div className={styles.heroCard}>
             {primaryPhoto ? (
               <img
-                src={primaryPhoto.url}
+                src={primaryPhoto.photoUrl}
                 alt={displayName}
                 className={styles.heroImage}
               />
@@ -250,12 +253,6 @@ const MyProfile = () => {
                   </span>
                 </div>
               )}
-              <div className={styles.infoRow}>
-                <span className={styles.infoLabel}>Member Since</span>
-                <span className={styles.infoValue}>
-                  {new Date(profileData.createdAt).toLocaleDateString("vi-VN")}
-                </span>
-              </div>
             </div>
           </div>
 
@@ -322,11 +319,13 @@ const MyProfile = () => {
                   onClick={() => setLightboxIdx(idx)}
                 >
                   <img
-                    src={photo.url}
+                    src={photo.photoUrl}
                     alt={`Photo ${idx + 1}`}
                     className={styles.galleryImg}
                   />
-                  {photo.isPrimary && <div className={styles.galleryPrimary} />}
+                  {photo.displayOrder === 0 && (
+                    <div className={styles.galleryPrimary} />
+                  )}
                 </div>
               ))}
 
@@ -572,7 +571,7 @@ const MyProfile = () => {
           )}
 
           <img
-            src={photos[lightboxIdx].url}
+            src={photos[lightboxIdx].photoUrl}
             alt={`Photo ${lightboxIdx + 1}`}
             onClick={(e) => e.stopPropagation()}
           />

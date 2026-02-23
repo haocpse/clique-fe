@@ -102,11 +102,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setUser({
         id: userId,
         email: data.email,
-        enabled: true,
-        emailVerified: false,
-        authProvider: "LOCAL",
-        role: "USER",
-        createdAt: new Date().toISOString(),
         photos: [],
       });
     }

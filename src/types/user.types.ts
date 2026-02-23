@@ -1,8 +1,8 @@
 // ── Enums ──
 
 export type Gender = "MALE" | "FEMALE" | "OTHER";
-export type DrinkingHabit = "NO" | "SOCIAL" | "REGULAR";
-export type SmokingHabit = "NO" | "SOCIAL" | "REGULAR";
+export type DrinkingHabit = "NEVER" | "NO" | "SOCIAL" | "REGULAR";
+export type SmokingHabit = "NEVER" | "NO" | "SOCIAL" | "REGULAR";
 export type InterestedIn = "MALE" | "FEMALE" | "BOTH";
 
 export type ZodiacSign =
@@ -70,6 +70,7 @@ export interface UserProfile {
   interestedIn?: InterestedIn;
   minAgePreference?: number;
   maxAgePreference?: number;
+  maxDistanceKm?: number;
 }
 
 export interface CreateProfileRequest extends UserProfile {}
@@ -81,20 +82,16 @@ export interface AuthenticationResponse {
 // ── User ──
 export interface UserPhoto {
   id: number;
-  url: string;
-  isPrimary: boolean;
+  photoUrl: string;
+  displayOrder: number;
 }
 
 export interface UserResponse {
   id: number;
   email: string;
   phoneNumber?: string;
-  enabled: boolean;
-  emailVerified: boolean;
-  authProvider: string;
-  role: string;
-  lastLogin?: string;
-  createdAt: string;
+  swipeOrder?: string;
   profile?: UserProfile;
   photos: UserPhoto[];
+  availabilities?: AvailabilityResponse[];
 }

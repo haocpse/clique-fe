@@ -17,6 +17,9 @@ export const userService = {
   getMyProfile: () =>
     axiosClient.get<ApiResponse<UserResponse>>(`/user/me`),
 
+  getUserById: (id: number) =>
+    axiosClient.get<ApiResponse<UserResponse>>(`/user/${id}`),
+
   addAvailability: (data: AvailabilityRequest) =>
     axiosClient.post<ApiResponse<AvailabilityResponse>>(
       `/user/availability`,

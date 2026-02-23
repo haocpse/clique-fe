@@ -77,6 +77,16 @@ const Header = () => {
                 <div className="absolute right-0 mt-3 w-44 rounded-xl bg-black/90 backdrop-blur border border-white/10 shadow-xl overflow-hidden">
                   <button
                     onClick={() => {
+                      navigate("/discover");
+                      setOpen(false);
+                    }}
+                    className="w-full px-4 py-2.5 text-left text-sm text-white hover:bg-white/10 transition"
+                  >
+                    Discover
+                  </button>
+
+                  <button
+                    onClick={() => {
                       navigate("/profile/me");
                       setOpen(false);
                     }}
