@@ -1,10 +1,10 @@
 import axiosClient from "./api";
-import type { LoginRequest, RegisterRequest, ApiResponse } from "@/types";
+import type { LoginRequest, RegisterRequest, ApiResponse, AuthenticationResponse } from "@/types";
 
 export const authService = {
   login: (data: LoginRequest) =>
-    axiosClient.post<ApiResponse<string>>("/auth/login", data),
+    axiosClient.post<ApiResponse<AuthenticationResponse>>("/auth/login", data),
 
   register: (data: RegisterRequest) =>
-    axiosClient.post<ApiResponse<string>>("/auth/register", data),
+    axiosClient.post<ApiResponse<AuthenticationResponse>>("/auth/register", data),
 };

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import styles from "../Profile.module.css";
+import styles from "./MyProfile.module.css";
 import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
 import { useAuth } from "@/hooks/useAuth";
@@ -15,13 +15,18 @@ const MyProfile = () => {
   const [profileData, setProfileData] = useState<UserResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [lightboxIdx, setLightboxIdx] = useState<number | null>(null);
 
   useEffect(() => {
     const loadProfile = async () => {
       if (!user) return;
       try {
-        const res = await userService.getProfile(user.id);
+        const res = await userService.getMyProfile();
         setProfileData(res.data.data);
+        const profile = res.data.data.profile;
+        if (!profile) {
+          navigate(ROUTES.PROFILE_CREATE);
+        }
       } catch {
         setError("Failed to load profile.");
       } finally {
@@ -36,6 +41,7 @@ const MyProfile = () => {
     navigate(ROUTES.LOGIN);
   };
 
+  /* ─── Loading state ─── */
   if (loading) {
     return (
       <div className={styles.loadingWrapper}>
@@ -45,29 +51,30 @@ const MyProfile = () => {
   }
 
   const profile = profileData?.profile;
+  const photos = profileData?.photos ?? [];
+  const primaryPhoto = photos.find((p) => p.isPrimary) || photos[0];
+
   const initial =
     profile?.firstName?.charAt(0)?.toUpperCase() ||
     profileData?.email?.charAt(0)?.toUpperCase() ||
     "?";
 
-  // No profile yet → prompt to create
+  /* ─── Empty profile ─── */
   if (!profile) {
     return (
       <>
         <Header />
-        <div className={styles.profilePageWrapper}>
-          <div className={styles.profileContainer}>
-            <div className={styles.profileCard}>
-              <div className={styles.emptyProfile}>
-                <h2>Welcome to Clique!</h2>
-                <p>You haven't created your profile yet. Let's get started!</p>
-                <button
-                  className={styles.createBtn}
-                  onClick={() => navigate(ROUTES.PROFILE_CREATE)}
-                >
-                  Create Profile
-                </button>
-              </div>
+        <div className={styles.pageWrapper}>
+          <div className={styles.profileLayout}>
+            <div className={styles.emptyCard}>
+              <h2>Welcome to Clique!</h2>
+              <p>You haven't created your profile yet. Let's get started!</p>
+              <button
+                className={styles.createBtn}
+                onClick={() => navigate(ROUTES.PROFILE_CREATE)}
+              >
+                Create Profile
+              </button>
             </div>
           </div>
         </div>
@@ -76,241 +83,267 @@ const MyProfile = () => {
     );
   }
 
+  /* ─── Helpers ─── */
   const formatLabel = (val?: string) =>
     val ? val.charAt(0).toUpperCase() + val.slice(1).toLowerCase() : "—";
+
+  const calcAge = (birthday: string): number | null => {
+    try {
+      const bd = new Date(birthday);
+      const now = new Date();
+      let age = now.getFullYear() - bd.getFullYear();
+      const m = now.getMonth() - bd.getMonth();
+      if (m < 0 || (m === 0 && now.getDate() < bd.getDate())) age--;
+      return age;
+    } catch {
+      return null;
+    }
+  };
+
+  const age = calcAge(profile.birthday);
+  const displayName =
+    profile.displayName ||
+    `${profile.firstName} ${profile.lastName || ""}`.trim();
+
+  /* Build lifestyle tags */
+  const tags: string[] = [];
+  if (profile.zodiacSign) tags.push(formatLabel(profile.zodiacSign));
+  if (profile.drinkingHabit)
+    tags.push(`Drinking: ${formatLabel(profile.drinkingHabit)}`);
+  if (profile.smokingHabit)
+    tags.push(`Smoking: ${formatLabel(profile.smokingHabit)}`);
+  if (profile.heightCm) tags.push(`${profile.heightCm} cm`);
+  if (profile.occupation) tags.push(profile.occupation);
+  if (profile.school) tags.push(profile.school);
 
   return (
     <>
       <Header />
-      <div className={styles.profilePageWrapper}>
-        <div className={styles.profileContainer}>
+      <div className={styles.pageWrapper}>
+        <div className={styles.profileLayout}>
           {error && <div className={styles.error}>{error}</div>}
 
-          <div className={styles.profileCard}>
-            {/* Header */}
-            <div className={styles.profileHeader}>
-              <div className={styles.avatar}>{initial}</div>
-              <div className={styles.profileHeaderInfo}>
-                <h2>
-                  {profile.displayName ||
-                    `${profile.firstName} ${profile.lastName || ""}`.trim()}
-                </h2>
-                <p>{profileData.email}</p>
+          {/* ─── Left: Hero Photo Card ─── */}
+          <div className={styles.heroCard}>
+            {primaryPhoto ? (
+              <img
+                src={primaryPhoto.url}
+                alt={displayName}
+                className={styles.heroImage}
+              />
+            ) : (
+              <div className={styles.heroPlaceholder}>
+                <span className={styles.heroInitial}>{initial}</span>
+              </div>
+            )}
+
+            <div className={styles.heroOverlay}>
+              <h1 className={styles.heroName}>
+                {displayName}
+                {age !== null && <span>, {age}</span>}
+              </h1>
+              <div className={styles.heroMeta}>
+                {profile.occupation && <span>{profile.occupation}</span>}
+                {profile.occupation && (profile.city || profile.country) && (
+                  <span className={styles.heroDot} />
+                )}
+                {(profile.city || profile.country) && (
+                  <span>
+                    {[profile.city, profile.country].filter(Boolean).join(", ")}
+                  </span>
+                )}
               </div>
             </div>
+          </div>
 
-            {/* Info grid */}
-            <h3 className={styles.sectionTitle}>Basic Info</h3>
-            <div className={styles.infoGrid}>
-              <div className={styles.infoItem}>
-                <span className={styles.infoLabel}>First Name</span>
-                <span className={styles.infoValue}>{profile.firstName}</span>
+          {/* ─── Right: Sidebar ─── */}
+          <div className={styles.sidebar}>
+            {/* Preferences card */}
+            <div className={styles.infoCard}>
+              <div className={styles.cardHeader}>
+                <h3 className={styles.cardTitle}>Preferences</h3>
+                <button
+                  className={styles.editLink}
+                  onClick={() => navigate(ROUTES.PROFILE_EDIT)}
+                >
+                  Edit
+                </button>
               </div>
-              {profile.lastName && (
-                <div className={styles.infoItem}>
-                  <span className={styles.infoLabel}>Last Name</span>
-                  <span className={styles.infoValue}>{profile.lastName}</span>
+
+              {profile.interestedIn && (
+                <div className={styles.infoRow}>
+                  <span className={styles.infoLabel}>Interested In</span>
+                  <span className={styles.infoValue}>
+                    {formatLabel(profile.interestedIn)}
+                  </span>
                 </div>
               )}
-              <div className={styles.infoItem}>
-                <span className={styles.infoLabel}>Birthday</span>
-                <span className={styles.infoValue}>{profile.birthday}</span>
-              </div>
-              <div className={styles.infoItem}>
+              {(profile.minAgePreference || profile.maxAgePreference) && (
+                <div className={styles.infoRow}>
+                  <span className={styles.infoLabel}>Age Range</span>
+                  <span className={styles.infoValue}>
+                    {profile.minAgePreference ?? "—"} -{" "}
+                    {profile.maxAgePreference ?? "—"}
+                  </span>
+                </div>
+              )}
+              <div className={styles.infoRow}>
                 <span className={styles.infoLabel}>Gender</span>
                 <span className={styles.infoValue}>
                   {formatLabel(profile.gender)}
                 </span>
               </div>
+            </div>
+
+            {/* Account card */}
+            <div className={styles.infoCard}>
+              <div className={styles.cardHeader}>
+                <h3 className={styles.cardTitle}>Account</h3>
+              </div>
+              <div className={styles.infoRow}>
+                <span className={styles.infoLabel}>Email</span>
+                <span className={styles.infoValue}>{profileData.email}</span>
+              </div>
               {profile.phoneNumber && (
-                <div className={styles.infoItem}>
+                <div className={styles.infoRow}>
                   <span className={styles.infoLabel}>Phone</span>
                   <span className={styles.infoValue}>
                     {profile.phoneNumber}
                   </span>
                 </div>
               )}
-              {profile.heightCm && (
-                <div className={styles.infoItem}>
-                  <span className={styles.infoLabel}>Height</span>
-                  <span className={styles.infoValue}>
-                    {profile.heightCm} cm
-                  </span>
+              <div className={styles.infoRow}>
+                <span className={styles.infoLabel}>Member Since</span>
+                <span className={styles.infoValue}>
+                  {new Date(profileData.createdAt).toLocaleDateString("vi-VN")}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* ─── About (full width) ─── */}
+          <div className={`${styles.aboutCard} ${styles.fullWidth}`}>
+            <span className={styles.aboutTitle}>About</span>
+
+            {profile.bio ? (
+              <p className={styles.aboutText}>{profile.bio}</p>
+            ) : (
+              <p
+                className={styles.aboutText}
+                style={{ opacity: 0.4, fontStyle: "italic" }}
+              >
+                No bio yet. Edit your profile to add one!
+              </p>
+            )}
+
+            {/* Tags */}
+            {tags.length > 0 && (
+              <div className={styles.tagsSection}>
+                <div className={styles.tagsLabel}>Lifestyle</div>
+                <div className={styles.tagsRow}>
+                  {tags.map((t, i) => (
+                    <span key={i} className={styles.tag}>
+                      {t}
+                    </span>
+                  ))}
                 </div>
+              </div>
+            )}
+          </div>
+
+          {/* ─── Photo Gallery (full width) ─── */}
+          <div className={`${styles.galleryCard} ${styles.fullWidth}`}>
+            <div className={styles.cardHeader}>
+              <h3 className={styles.cardTitle}>Photos</h3>
+              <span className={styles.infoLabel}>
+                {photos.length} photo{photos.length !== 1 && "s"}
+              </span>
+            </div>
+
+            <div className={styles.galleryGrid}>
+              {photos.map((photo, idx) => (
+                <div
+                  key={photo.id}
+                  className={styles.galleryItem}
+                  onClick={() => setLightboxIdx(idx)}
+                >
+                  <img
+                    src={photo.url}
+                    alt={`Photo ${idx + 1}`}
+                    className={styles.galleryImg}
+                  />
+                  {photo.isPrimary && <div className={styles.galleryPrimary} />}
+                </div>
+              ))}
+
+              {photos.length === 0 && (
+                <>
+                  <div className={styles.galleryEmpty}>No photos</div>
+                  <div className={styles.galleryEmpty}>+</div>
+                  <div className={styles.galleryEmpty}>+</div>
+                </>
               )}
             </div>
+          </div>
 
-            {/* Bio */}
-            {profile.bio && (
-              <div className={styles.bioSection}>
-                <h3 className={styles.sectionTitle}>Bio</h3>
-                <p className={styles.bioText}>"{profile.bio}"</p>
-              </div>
-            )}
-
-            {/* Location & Work */}
-            {(profile.city ||
-              profile.country ||
-              profile.occupation ||
-              profile.company ||
-              profile.school) && (
-              <div className={styles.sectionSpacer}>
-                <h3 className={styles.sectionTitle}>Location & Work</h3>
-                <div className={styles.infoGrid}>
-                  {profile.city && (
-                    <div className={styles.infoItem}>
-                      <span className={styles.infoLabel}>City</span>
-                      <span className={styles.infoValue}>{profile.city}</span>
-                    </div>
-                  )}
-                  {profile.country && (
-                    <div className={styles.infoItem}>
-                      <span className={styles.infoLabel}>Country</span>
-                      <span className={styles.infoValue}>
-                        {profile.country}
-                      </span>
-                    </div>
-                  )}
-                  {profile.occupation && (
-                    <div className={styles.infoItem}>
-                      <span className={styles.infoLabel}>Occupation</span>
-                      <span className={styles.infoValue}>
-                        {profile.occupation}
-                      </span>
-                    </div>
-                  )}
-                  {profile.company && (
-                    <div className={styles.infoItem}>
-                      <span className={styles.infoLabel}>Company</span>
-                      <span className={styles.infoValue}>
-                        {profile.company}
-                      </span>
-                    </div>
-                  )}
-                  {profile.school && (
-                    <div className={styles.infoItem}>
-                      <span className={styles.infoLabel}>School</span>
-                      <span className={styles.infoValue}>{profile.school}</span>
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
-
-            {/* Lifestyle */}
-            {(profile.drinkingHabit ||
-              profile.smokingHabit ||
-              profile.zodiacSign) && (
-              <div className={styles.sectionSpacer}>
-                <h3 className={styles.sectionTitle}>Lifestyle</h3>
-                <div className={styles.infoGrid}>
-                  {profile.zodiacSign && (
-                    <div className={styles.infoItem}>
-                      <span className={styles.infoLabel}>Zodiac</span>
-                      <span className={styles.infoValue}>
-                        {formatLabel(profile.zodiacSign)}
-                      </span>
-                    </div>
-                  )}
-                  {profile.drinkingHabit && (
-                    <div className={styles.infoItem}>
-                      <span className={styles.infoLabel}>Drinking</span>
-                      <span className={styles.infoValue}>
-                        {formatLabel(profile.drinkingHabit)}
-                      </span>
-                    </div>
-                  )}
-                  {profile.smokingHabit && (
-                    <div className={styles.infoItem}>
-                      <span className={styles.infoLabel}>Smoking</span>
-                      <span className={styles.infoValue}>
-                        {formatLabel(profile.smokingHabit)}
-                      </span>
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
-
-            {/* Preferences */}
-            {(profile.interestedIn ||
-              profile.minAgePreference ||
-              profile.maxAgePreference) && (
-              <div className={styles.sectionSpacer}>
-                <h3 className={styles.sectionTitle}>Preferences</h3>
-                <div className={styles.infoGrid}>
-                  {profile.interestedIn && (
-                    <div className={styles.infoItem}>
-                      <span className={styles.infoLabel}>Interested In</span>
-                      <span className={styles.infoValue}>
-                        {formatLabel(profile.interestedIn)}
-                      </span>
-                    </div>
-                  )}
-                  {(profile.minAgePreference || profile.maxAgePreference) && (
-                    <div className={styles.infoItem}>
-                      <span className={styles.infoLabel}>Age Range</span>
-                      <span className={styles.infoValue}>
-                        {profile.minAgePreference ?? "—"} –{" "}
-                        {profile.maxAgePreference ?? "—"}
-                      </span>
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
-
-            {/* Account info */}
-            <div className={styles.sectionSpacer}>
-              <h3 className={styles.sectionTitle}>Account</h3>
-              <div className={styles.infoGrid}>
-                <div className={styles.infoItem}>
-                  <span className={styles.infoLabel}>Role</span>
-                  <span className={styles.infoValue}>{profileData.role}</span>
-                </div>
-                <div className={styles.infoItem}>
-                  <span className={styles.infoLabel}>Auth Provider</span>
-                  <span className={styles.infoValue}>
-                    {profileData.authProvider}
-                  </span>
-                </div>
-                <div className={styles.infoItem}>
-                  <span className={styles.infoLabel}>Member Since</span>
-                  <span className={styles.infoValue}>
-                    {new Date(profileData.createdAt).toLocaleDateString(
-                      "vi-VN",
-                    )}
-                  </span>
-                </div>
-                {profileData.lastLogin && (
-                  <div className={styles.infoItem}>
-                    <span className={styles.infoLabel}>Last Login</span>
-                    <span className={styles.infoValue}>
-                      {new Date(profileData.lastLogin).toLocaleDateString(
-                        "vi-VN",
-                      )}
-                    </span>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Actions */}
-            <div className={styles.actionRow}>
-              <button
-                className={styles.editBtn}
-                onClick={() => navigate(ROUTES.PROFILE_EDIT)}
-              >
-                Edit Profile
-              </button>
-              <button className={styles.logoutBtn} onClick={handleLogout}>
-                Logout
-              </button>
-            </div>
+          {/* ─── Actions (full width) ─── */}
+          <div className={`${styles.actionsRow} ${styles.fullWidth}`}>
+            <button
+              className={styles.editBtn}
+              onClick={() => navigate(ROUTES.PROFILE_EDIT)}
+            >
+              Edit Profile
+            </button>
+            <button className={styles.logoutBtn} onClick={handleLogout}>
+              Logout
+            </button>
           </div>
         </div>
       </div>
       <Footer />
+
+      {/* ─── Lightbox ─── */}
+      {lightboxIdx !== null && photos[lightboxIdx] && (
+        <div className={styles.lightbox} onClick={() => setLightboxIdx(null)}>
+          <button
+            className={styles.lightboxClose}
+            onClick={() => setLightboxIdx(null)}
+          >
+            ✕
+          </button>
+
+          {photos.length > 1 && (
+            <>
+              <button
+                className={`${styles.lightboxNav} ${styles.lightboxPrev}`}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setLightboxIdx(
+                    (lightboxIdx - 1 + photos.length) % photos.length,
+                  );
+                }}
+              >
+                ‹
+              </button>
+              <button
+                className={`${styles.lightboxNav} ${styles.lightboxNext}`}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setLightboxIdx((lightboxIdx + 1) % photos.length);
+                }}
+              >
+                ›
+              </button>
+            </>
+          )}
+
+          <img
+            src={photos[lightboxIdx].url}
+            alt={`Photo ${lightboxIdx + 1}`}
+            onClick={(e) => e.stopPropagation()}
+          />
+        </div>
+      )}
     </>
   );
 };

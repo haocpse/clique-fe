@@ -45,8 +45,11 @@ export interface UserProfile {
 
 export interface CreateProfileRequest extends UserProfile {}
 
-// ── User ──
+export interface AuthenticationResponse {
+  token: string;
+}
 
+// ── User ──
 export interface UserPhoto {
   id: number;
   url: string;

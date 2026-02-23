@@ -24,7 +24,5 @@ export const API_ENDPOINTS = {
 } as const;
 
 export const STORAGE_KEYS = {
-  ACCESS_TOKEN: "access_token",
-  REFRESH_TOKEN: "refresh_token",
-  USER: "user",
+  ACCESS_TOKEN: "access_token"
 } as const;

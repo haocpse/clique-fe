@@ -43,7 +43,7 @@ const EditProfile = () => {
     const loadProfile = async () => {
       if (!user) return;
       try {
-        const res = await userService.getProfile(user.id);
+        const res = await userService.getMyProfile();
         const profile = res.data.data.profile;
         if (profile) {
           setForm({

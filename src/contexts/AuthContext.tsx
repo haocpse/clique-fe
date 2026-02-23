@@ -46,7 +46,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         const userId = decodeTokenUserId(token);
         if (userId) {
           try {
-            const res = await userService.getProfile(userId);
+            const res = await userService.getMyProfile();
             setUser(res.data.data);
           } catch {
             // Token might be invalid/expired
@@ -65,7 +65,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const userId = decodeTokenUserId(token);
     if (!userId) return;
     try {
-      const res = await userService.getProfile(userId);
+      const res = await userService.getMyProfile();
       setUser(res.data.data);
     } catch {
       // silently fail
@@ -74,7 +74,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const login = async (data: LoginRequest) => {
     const res = await authService.login(data);
-    const jwt = res.data.data;
+    const jwt = res.data.data.token;
     localStorage.setItem(STORAGE_KEYS.ACCESS_TOKEN, jwt);
     setToken(jwt);
 
@@ -82,7 +82,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const userId = decodeTokenUserId(jwt);
     if (userId) {
       try {
-        const userRes = await userService.getProfile(userId);
+        const userRes = await userService.getMyProfile();
         setUser(userRes.data.data);
       } catch {
         // Profile may not exist yet
@@ -92,7 +92,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const register = async (data: RegisterRequest) => {
     const res = await authService.register(data);
-    const jwt = res.data.data;
+    const jwt = res.data.data.token;
     localStorage.setItem(STORAGE_KEYS.ACCESS_TOKEN, jwt);
     setToken(jwt);
 

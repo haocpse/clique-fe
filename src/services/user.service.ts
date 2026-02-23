@@ -8,6 +8,6 @@ export const userService = {
       data
     ),
 
-  getProfile: (userId: number) =>
-    axiosClient.get<ApiResponse<UserResponse>>(`/user/${userId}/profile`),
+  getMyProfile: () =>
+    axiosClient.get<ApiResponse<UserResponse>>(`/user/me`),
 };

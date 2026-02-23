@@ -1,0 +1,521 @@
+/* ═══════════════════════════════════════════════════════
+   MyProfile.module.css – Dating Profile Card Design
+   ═══════════════════════════════════════════════════════ */
+
+/* Page wrapper */
+.pageWrapper {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0a0a0f 0%, #1a1025 50%, #0f0a1a 100%);
+  padding: 2rem 1rem 4rem;
+}
+
+.profileLayout {
+  max-width: 80%;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+/* ─────────────────── Loading ─────────────────── */
+.loadingWrapper {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #0a0a0f 0%, #1a1025 50%, #0f0a1a 100%);
+}
+
+.loadingText {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 1rem;
+  letter-spacing: 0.5px;
+}
+
+/* ─────────────────── Hero Photo Card ─────────────────── */
+.heroCard {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  background: #15111d;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.4);
+}
+
+.heroImage {
+  width: 50%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  display: block;
+}
+
+.heroPlaceholder {
+  width: 50%;
+  aspect-ratio: 3 / 4;
+  background: linear-gradient(135deg, #2a1f3d, #1a1025);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.heroInitial {
+  font-family: "Playfair Display", serif;
+  font-size: 6rem;
+  font-weight: 700;
+  color: rgba(212, 175, 55, 0.5);
+}
+
+.heroOverlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 2rem 1.5rem 1.5rem;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.85));
+}
+
+.heroName {
+  font-family: "Playfair Display", serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.heroName span {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-weight: 400;
+  font-size: 1.5rem;
+  color: rgba(255, 255, 255, 0.8);
+  margin-left: 0.4rem;
+}
+
+.heroMeta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.4rem;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.heroDot {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.4);
+}
+
+/* ─────────────────── Sidebar ─────────────────── */
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Generic info card */
+.infoCard {
+  background: rgba(21, 17, 29, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  padding: 1.5rem;
+  backdrop-filter: blur(12px);
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.cardTitle {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: rgba(212, 175, 55, 0.8);
+  margin: 0;
+}
+
+.editLink {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 0.75rem;
+  color: rgba(212, 175, 55, 0.7);
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.editLink:hover {
+  color: rgb(212, 175, 55);
+}
+
+/* Info rows */
+.infoRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.infoRow:last-child {
+  border-bottom: none;
+}
+
+.infoLabel {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.infoValue {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 500;
+}
+
+/* ─────────────────── Full-width sections ─────────────────── */
+.fullWidth {
+  grid-column: 1 / -1;
+}
+
+/* About section */
+.aboutCard {
+  background: rgba(21, 17, 29, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  padding: 1.5rem;
+}
+
+.aboutIcon {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.aboutIcon svg {
+  width: 18px;
+  height: 18px;
+  color: rgba(212, 175, 55, 0.8);
+}
+
+.aboutTitle {
+  font-family: "Playfair Display", serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.aboutText {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* ─────────────────── Tags / Lifestyle ─────────────────── */
+.tagsSection {
+  margin-top: 1.25rem;
+}
+
+.tagsLabel {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: rgba(212, 175, 55, 0.6);
+  margin-bottom: 0.6rem;
+}
+
+.tagsRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.85rem;
+  border-radius: 100px;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  background: rgba(212, 175, 55, 0.06);
+  color: rgba(255, 255, 255, 0.8);
+  transition: all 0.2s;
+}
+
+.tag:hover {
+  border-color: rgba(212, 175, 55, 0.4);
+  background: rgba(212, 175, 55, 0.12);
+}
+
+.tagIcon {
+  font-size: 0.85rem;
+}
+
+/* ─────────────────── Photo Gallery ─────────────────── */
+.galleryCard {
+  background: rgba(21, 17, 29, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  padding: 1.5rem;
+}
+
+.galleryGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.galleryItem {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  aspect-ratio: 1;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.galleryItem:hover {
+  transform: scale(1.03);
+}
+
+.galleryImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.galleryPrimary {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgb(212, 175, 55);
+  box-shadow: 0 0 8px rgba(212, 175, 55, 0.6);
+}
+
+.galleryEmpty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1;
+  border-radius: 12px;
+  border: 2px dashed rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.2);
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 0.75rem;
+}
+
+/* ─────────────────── Lightbox ─────────────────── */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.92);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  animation: fadeIn 0.2s ease;
+}
+
+.lightbox img {
+  max-width: 90vw;
+  max-height: 85vh;
+  object-fit: contain;
+  border-radius: 12px;
+}
+
+.lightboxClose {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: #fff;
+  font-size: 1.5rem;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.lightboxClose:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.lightboxNav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.08);
+  border: none;
+  color: #fff;
+  font-size: 1.5rem;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.lightboxNav:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.lightboxPrev {
+  left: 1.5rem;
+}
+
+.lightboxNext {
+  right: 1.5rem;
+}
+
+/* ─────────────────── Actions ─────────────────── */
+.actionsRow {
+  display: flex;
+  gap: 1rem;
+}
+
+.editBtn {
+  flex: 1;
+  padding: 0.85rem 1.5rem;
+  border-radius: 12px;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  background: linear-gradient(135deg, rgb(212, 175, 55), rgb(170, 130, 30));
+  color: #0a0a0f;
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.25);
+}
+
+.editBtn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.35);
+}
+
+.logoutBtn {
+  padding: 0.85rem 1.5rem;
+  border-radius: 12px;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  background: rgba(239, 68, 68, 0.08);
+  color: rgb(252, 165, 165);
+}
+
+.logoutBtn:hover {
+  background: rgba(239, 68, 68, 0.15);
+  border-color: rgba(239, 68, 68, 0.4);
+}
+
+/* ─────────────────── Error ─────────────────── */
+.error {
+  grid-column: 1 / -1;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 0.8rem;
+  color: rgb(252, 165, 165);
+  text-align: center;
+}
+
+/* ─────────────────── Empty Profile ─────────────────── */
+.emptyCard {
+  grid-column: 1 / -1;
+  background: rgba(21, 17, 29, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 20px;
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+.emptyCard h2 {
+  font-family: "Playfair Display", serif;
+  font-size: 1.8rem;
+  color: #ffffff;
+  margin: 0 0 0.75rem;
+}
+
+.emptyCard p {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.9rem;
+  margin: 0 0 2rem;
+}
+
+.createBtn {
+  padding: 0.85rem 2.5rem;
+  border-radius: 12px;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  background: linear-gradient(135deg, rgb(212, 175, 55), rgb(170, 130, 30));
+  color: #0a0a0f;
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.25);
+  transition: all 0.25s ease;
+}
+
+.createBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.35);
+}
+
+/* ─────────────────── Responsive ─────────────────── */
+@media (max-width: 768px) {
+  .profileLayout {
+    grid-template-columns: 1fr;
+  }
+
+  .heroName {
+    font-size: 1.5rem;
+  }
+
+  .galleryGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}

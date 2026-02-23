@@ -13,4 +13,5 @@ export type {
   CreateProfileRequest,
   UserPhoto,
   UserResponse,
+  AuthenticationResponse,
 } from "./user.types";
