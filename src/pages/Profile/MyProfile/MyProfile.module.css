@@ -500,6 +500,85 @@
   box-shadow: 0 6px 20px rgba(212, 175, 55, 0.35);
 }
 
+.lifestyleSection {
+  margin-top: 1.5rem;
+}
+
+.lifestyleTitle {
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.5;
+  margin-bottom: 0.75rem;
+}
+
+.lifestyleList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.lifestyleRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.65rem 0.9rem;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.lifestyleLabel {
+  font-size: 0.85rem;
+  opacity: 0.6;
+}
+
+.lifestyleValue {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.sectionBlock {
+  margin-top: 1.5rem;
+}
+
+.sectionLabel {
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.5;
+  margin-bottom: 0.75rem;
+}
+
+.basicList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.basicRow {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.9rem;
+}
+
+.basicKey {
+  opacity: 0.6;
+}
+
+.basicDot {
+  opacity: 0.4;
+}
+
+.basicValue {
+  font-weight: 500;
+}
+
+.aboutTextEmpty {
+  opacity: 0.4;
+  font-style: italic;
+}
+
 /* ─────────────────── Responsive ─────────────────── */
 @media (max-width: 768px) {
   .profileLayout {

@@ -10,7 +10,6 @@ import type { UserResponse } from "@/types";
 
 const MyProfile = () => {
   const navigate = useNavigate();
-  const { user, logout } = useAuth();
 
   const [profileData, setProfileData] = useState<UserResponse | null>(null);
   const [loading, setLoading] = useState(true);
@@ -19,7 +18,6 @@ const MyProfile = () => {
 
   useEffect(() => {
     const loadProfile = async () => {
-      if (!user) return;
       try {
         const res = await userService.getMyProfile();
         setProfileData(res.data.data);
@@ -34,12 +32,7 @@ const MyProfile = () => {
       }
     };
     loadProfile();
-  }, [user]);
-
-  const handleLogout = () => {
-    logout();
-    navigate(ROUTES.LOGIN);
-  };
+  }, []);
 
   /* ─── Loading state ─── */
   if (loading) {
@@ -106,15 +99,35 @@ const MyProfile = () => {
     `${profile.firstName} ${profile.lastName || ""}`.trim();
 
   /* Build lifestyle tags */
-  const tags: string[] = [];
-  if (profile.zodiacSign) tags.push(formatLabel(profile.zodiacSign));
-  if (profile.drinkingHabit)
-    tags.push(`Drinking: ${formatLabel(profile.drinkingHabit)}`);
-  if (profile.smokingHabit)
-    tags.push(`Smoking: ${formatLabel(profile.smokingHabit)}`);
-  if (profile.heightCm) tags.push(`${profile.heightCm} cm`);
-  if (profile.occupation) tags.push(profile.occupation);
-  if (profile.school) tags.push(profile.school);
+  const basicInfoItems = [
+    {
+      label: "Height",
+      value: profile.heightCm ? `${profile.heightCm} cm` : null,
+    },
+    {
+      label: "Occupation",
+      value: profile.occupation || null,
+    },
+    {
+      label: "School",
+      value: profile.school || null,
+    },
+  ].filter((i) => i.value);
+
+  const lifestyleItems = [
+    {
+      label: "Drinking",
+      value: profile.drinkingHabit ? formatLabel(profile.drinkingHabit) : null,
+    },
+    {
+      label: "Smoking",
+      value: profile.smokingHabit ? formatLabel(profile.smokingHabit) : null,
+    },
+    {
+      label: "Zodiac",
+      value: profile.zodiacSign ? formatLabel(profile.zodiacSign) : null,
+    },
+  ].filter((i) => i.value);
 
   return (
     <>
@@ -236,14 +249,30 @@ const MyProfile = () => {
               </p>
             )}
 
+            {/* Basic Info */}
+            {basicInfoItems.length > 0 && (
+              <div className={styles.sectionBlock}>
+                <div className={styles.sectionLabel}>Basic Info</div>
+                <div className={styles.basicList}>
+                  {basicInfoItems.map((item, idx) => (
+                    <div key={idx} className={styles.basicRow}>
+                      <span className={styles.basicKey}>{item.label}</span>
+                      <span className={styles.basicDot}>•</span>
+                      <span className={styles.basicValue}>{item.value}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {/* Tags */}
-            {tags.length > 0 && (
-              <div className={styles.tagsSection}>
-                <div className={styles.tagsLabel}>Lifestyle</div>
+            {lifestyleItems.length > 0 && (
+              <div className={styles.sectionBlock}>
+                <div className={styles.sectionLabel}>Lifestyle</div>
                 <div className={styles.tagsRow}>
-                  {tags.map((t, i) => (
-                    <span key={i} className={styles.tag}>
-                      {t}
+                  {lifestyleItems.map((item, idx) => (
+                    <span key={idx} className={styles.tag}>
+                      {item.label}: {item.value}
                     </span>
                   ))}
                 </div>
@@ -293,9 +322,6 @@ const MyProfile = () => {
               onClick={() => navigate(ROUTES.PROFILE_EDIT)}
             >
               Edit Profile
-            </button>
-            <button className={styles.logoutBtn} onClick={handleLogout}>
-              Logout
             </button>
           </div>
         </div>

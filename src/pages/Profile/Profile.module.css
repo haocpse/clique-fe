@@ -1,13 +1,23 @@
+/* ═══════════════════════════════════════════════════════
+   Profile.module.css – Create / Edit Profile Pages
+   Redesigned to match MyProfile card-based layout
+   ═══════════════════════════════════════════════════════ */
+
+/* Page wrapper */
 .profilePageWrapper {
   min-height: 100vh;
-  background-color: #0a0a0a;
-  padding: 2rem 1rem;
+  background: linear-gradient(135deg, #0a0a0f 0%, #1a1025 50%, #0f0a1a 100%);
+  padding: 2rem 1rem 4rem;
 }
 
+/* Layout container — 80% width, single column */
 .profileContainer {
-  max-width: 720px;
+  max-width: 80%;
   margin: 0 auto;
   padding-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
 .pageTitle {
@@ -15,45 +25,39 @@
   font-size: 1.75rem;
   font-weight: 700;
   color: #ffffff;
-  margin: 0 0 0.5rem;
-  font-style: italic;
+  margin: 0 0 0.25rem;
 }
 
 .pageSubtitle {
   font-family: "Plus Jakarta Sans", sans-serif;
   font-size: 0.875rem;
   color: rgba(255, 255, 255, 0.5);
-  margin: 0 0 2.5rem;
+  margin: 0 0 0.5rem;
   font-weight: 400;
 }
 
-/* Form card */
-.formCard {
-  background: linear-gradient(
-    145deg,
-    rgba(30, 30, 30, 0.9) 0%,
-    rgba(20, 20, 20, 0.95) 100%
-  );
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 20px;
-  padding: 2.5rem;
-  box-shadow:
-    0 25px 60px rgba(0, 0, 0, 0.5),
-    0 0 80px rgba(243, 206, 131, 0.03);
+/* ─────────────────── Section Card ─────────────────── */
+.formSectionCard {
+  background: rgba(21, 17, 29, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  padding: 1.75rem;
+  backdrop-filter: blur(12px);
 }
 
 .sectionTitle {
   font-family: "Plus Jakarta Sans", sans-serif;
   font-size: 0.7rem;
   font-weight: 700;
-  letter-spacing: 0.2em;
+  letter-spacing: 1.5px;
   text-transform: uppercase;
-  color: rgb(243, 206, 131);
+  color: rgba(243, 206, 131, 0.8);
   margin: 0 0 1.25rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid rgba(243, 206, 131, 0.15);
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
+/* ─────────────────── Form Fields ─────────────────── */
 .fieldRow {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -150,23 +154,60 @@
   background: rgba(255, 255, 255, 0.05);
 }
 
-/* Spacing between sections */
-.sectionSpacer {
-  margin-top: 2rem;
+/* ─────────────────── Photo Upload Section ─────────────────── */
+.photoGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+  margin-top: 1rem;
 }
 
-/* Submit button */
+.photoSlot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1;
+  border-radius: 12px;
+  border: 2px dashed rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.2);
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.photoSlot:hover {
+  border-color: rgba(243, 206, 131, 0.3);
+  background: rgba(243, 206, 131, 0.04);
+  color: rgba(243, 206, 131, 0.5);
+}
+
+.photoSlotLabel {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.3);
+  text-align: center;
+  margin-top: 0.5rem;
+}
+
+/* ─────────────────── Actions ─────────────────── */
+.actionsCard {
+  display: flex;
+  gap: 1rem;
+}
+
 .submitBtn {
-  width: 100%;
+  flex: 1;
   padding: 0.95rem;
   border: none;
   border-radius: 12px;
   background: linear-gradient(
     135deg,
     rgb(243, 206, 131) 0%,
-    rgb(230, 190, 110) 100%
+    rgb(220, 180, 100) 100%
   );
-  color: #0a0a0a;
+  color: #0a0a0f;
   font-family: "Plus Jakarta Sans", sans-serif;
   font-size: 0.85rem;
   font-weight: 700;
@@ -174,17 +215,12 @@
   text-transform: uppercase;
   cursor: pointer;
   transition: all 250ms ease;
-  margin-top: 2rem;
+  box-shadow: 0 4px 15px rgba(243, 206, 131, 0.25);
 }
 
 .submitBtn:hover {
-  background: linear-gradient(
-    135deg,
-    rgb(250, 215, 145) 0%,
-    rgb(243, 206, 131) 100%
-  );
-  box-shadow: 0 8px 25px rgba(243, 206, 131, 0.25);
   transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(243, 206, 131, 0.35);
 }
 
 .submitBtn:active {
@@ -198,13 +234,30 @@
   box-shadow: none;
 }
 
-/* Error / success messages */
+.cancelBtn {
+  padding: 0.95rem 1.5rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.7);
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 250ms ease;
+}
+
+.cancelBtn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* ─────────────────── Error / Success ─────────────────── */
 .error {
   background: rgba(239, 68, 68, 0.1);
   border: 1px solid rgba(239, 68, 68, 0.3);
-  border-radius: 10px;
+  border-radius: 12px;
   padding: 0.75rem 1rem;
-  margin-bottom: 1.5rem;
   font-family: "Plus Jakarta Sans", sans-serif;
   font-size: 0.8rem;
   color: rgb(252, 165, 165);
@@ -214,242 +267,49 @@
 .success {
   background: rgba(34, 197, 94, 0.1);
   border: 1px solid rgba(34, 197, 94, 0.3);
-  border-radius: 10px;
+  border-radius: 12px;
   padding: 0.75rem 1rem;
-  margin-bottom: 1.5rem;
   font-family: "Plus Jakarta Sans", sans-serif;
   font-size: 0.8rem;
   color: rgb(134, 239, 172);
   text-align: center;
 }
 
-/* ── My Profile page ── */
-
-.profileCard {
-  background: linear-gradient(
-    145deg,
-    rgba(30, 30, 30, 0.9) 0%,
-    rgba(20, 20, 20, 0.95) 100%
-  );
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 20px;
-  padding: 2.5rem;
-  box-shadow:
-    0 25px 60px rgba(0, 0, 0, 0.5),
-    0 0 80px rgba(243, 206, 131, 0.03);
-}
-
-.profileHeader {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-  margin-bottom: 2rem;
-  padding-bottom: 1.5rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-}
-
-.avatar {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  background: linear-gradient(
-    135deg,
-    rgb(243, 206, 131) 0%,
-    rgb(230, 190, 110) 100%
-  );
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: "Plus Jakarta Sans", sans-serif;
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: #0a0a0a;
-  flex-shrink: 0;
-}
-
-.profileHeaderInfo h2 {
-  font-family: "Plus Jakarta Sans", sans-serif;
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #ffffff;
-  margin: 0 0 0.25rem;
-}
-
-.profileHeaderInfo p {
-  font-family: "Plus Jakarta Sans", sans-serif;
-  font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.45);
-  margin: 0;
-}
-
-.infoGrid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.25rem;
-  margin-bottom: 1.5rem;
-}
-
-.infoItem {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-.infoLabel {
-  font-family: "Plus Jakarta Sans", sans-serif;
-  font-size: 0.65rem;
-  font-weight: 700;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.35);
-}
-
-.infoValue {
-  font-family: "Plus Jakarta Sans", sans-serif;
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: #ffffff;
-}
-
-.bioSection {
-  margin-top: 1.5rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-}
-
-.bioText {
-  font-family: "Plus Jakarta Sans", sans-serif;
-  font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.7);
-  line-height: 1.6;
-  font-style: italic;
-}
-
-.actionRow {
-  display: flex;
-  gap: 1rem;
-  margin-top: 2rem;
-}
-
-.editBtn {
-  flex: 1;
-  padding: 0.85rem;
-  border: none;
-  border-radius: 12px;
-  background: linear-gradient(
-    135deg,
-    rgb(243, 206, 131) 0%,
-    rgb(230, 190, 110) 100%
-  );
-  color: #0a0a0a;
-  font-family: "Plus Jakarta Sans", sans-serif;
-  font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: all 250ms ease;
-}
-
-.editBtn:hover {
-  box-shadow: 0 8px 25px rgba(243, 206, 131, 0.25);
-  transform: translateY(-1px);
-}
-
-.logoutBtn {
-  padding: 0.85rem 1.5rem;
-  border: 1px solid rgba(239, 68, 68, 0.4);
-  border-radius: 12px;
-  background: rgba(239, 68, 68, 0.08);
-  color: rgb(252, 165, 165);
-  font-family: "Plus Jakarta Sans", sans-serif;
-  font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: all 250ms ease;
-}
-
-.logoutBtn:hover {
-  background: rgba(239, 68, 68, 0.15);
-  border-color: rgba(239, 68, 68, 0.6);
-}
-
-.emptyProfile {
-  text-align: center;
-  padding: 3rem 1rem;
-}
-
-.emptyProfile h2 {
-  font-family: "Plus Jakarta Sans", sans-serif;
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: #ffffff;
-  margin: 0 0 0.75rem;
-}
-
-.emptyProfile p {
-  font-family: "Plus Jakarta Sans", sans-serif;
-  font-size: 0.875rem;
-  color: rgba(255, 255, 255, 0.45);
-  margin: 0 0 1.5rem;
-}
-
-.createBtn {
-  padding: 0.85rem 2rem;
-  border: none;
-  border-radius: 12px;
-  background: linear-gradient(
-    135deg,
-    rgb(243, 206, 131) 0%,
-    rgb(230, 190, 110) 100%
-  );
-  color: #0a0a0a;
-  font-family: "Plus Jakarta Sans", sans-serif;
-  font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: all 250ms ease;
-}
-
-.createBtn:hover {
-  box-shadow: 0 8px 25px rgba(243, 206, 131, 0.25);
-  transform: translateY(-1px);
-}
-
-/* Loading */
+/* ─────────────────── Loading ─────────────────── */
 .loadingWrapper {
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #0a0a0a;
+  background: linear-gradient(135deg, #0a0a0f 0%, #1a1025 50%, #0f0a1a 100%);
 }
 
 .loadingText {
   font-family: "Plus Jakarta Sans", sans-serif;
   font-size: 1rem;
-  color: rgba(255, 255, 255, 0.45);
+  color: rgba(255, 255, 255, 0.5);
+  letter-spacing: 0.5px;
 }
 
-@media (max-width: 640px) {
+/* ─────────────────── Responsive ─────────────────── */
+@media (max-width: 768px) {
+  .profileContainer {
+    max-width: 95%;
+  }
+
   .fieldRow {
     grid-template-columns: 1fr;
   }
 
-  .infoGrid {
-    grid-template-columns: 1fr;
+  .formSectionCard {
+    padding: 1.25rem;
   }
 
-  .formCard,
-  .profileCard {
-    padding: 1.5rem;
+  .photoGrid {
+    grid-template-columns: repeat(2, 1fr);
   }
 
-  .actionRow {
+  .actionsCard {
     flex-direction: column;
   }
 }
