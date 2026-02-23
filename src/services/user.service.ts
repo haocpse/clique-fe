@@ -1,5 +1,11 @@
 import axiosClient from "./api";
-import type { CreateProfileRequest, UserResponse, ApiResponse } from "@/types";
+import type {
+  CreateProfileRequest,
+  UserResponse,
+  ApiResponse,
+  AvailabilityRequest,
+  AvailabilityResponse,
+} from "@/types";
 
 export const userService = {
   createProfile: (userId: number, data: CreateProfileRequest) =>
@@ -10,4 +16,10 @@ export const userService = {
 
   getMyProfile: () =>
     axiosClient.get<ApiResponse<UserResponse>>(`/user/me`),
+
+  addAvailability: (data: AvailabilityRequest) =>
+    axiosClient.post<ApiResponse<AvailabilityResponse>>(
+      `/user/availability`,
+      data
+    ),
 };

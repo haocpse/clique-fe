@@ -19,6 +19,35 @@ export type ZodiacSign =
   | "AQUARIUS"
   | "PISCES";
 
+export type DayOfWeek =
+  | "MONDAY"
+  | "TUESDAY"
+  | "WEDNESDAY"
+  | "THURSDAY"
+  | "FRIDAY"
+  | "SATURDAY"
+  | "SUNDAY";
+
+export interface AvailabilityRequest {
+  dayOfWeek?: DayOfWeek;
+  specificDate?: string;
+  startTime: string;
+  endTime: string;
+  isRecurring: boolean;
+  note?: string;
+}
+
+export interface AvailabilityResponse {
+  id: number;
+  dayOfWeek?: DayOfWeek;
+  specificDate?: string;
+  startTime: string;
+  endTime: string;
+  isRecurring: boolean;
+  isActive: boolean;
+  note?: string;
+}
+
 // ── Profile ──
 
 export interface UserProfile {
