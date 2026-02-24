@@ -3,9 +3,16 @@ import styles from "./Discover.module.css";
 import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
 import { userService } from "@/services/user.service";
-import type { UserResponse, AvailabilityResponse } from "@/types";
+import { swipeService } from "@/services/swipe.service";
+import { matchService } from "@/services/match.service";
+import type { UserResponse, MatchItem, MatchSchedule } from "@/types";
+
+type TabType = "discover" | "matches";
 
 const Discover = () => {
+  const [activeTab, setActiveTab] = useState<TabType>("discover");
+
+  /* ═══════ DISCOVER STATE ═══════ */
   const [swipeIds, setSwipeIds] = useState<number[]>([]);
   const [currentIdx, setCurrentIdx] = useState(0);
   const [profileData, setProfileData] = useState<UserResponse | null>(null);
@@ -14,6 +21,14 @@ const Discover = () => {
   const [error, setError] = useState("");
   const [lightboxIdx, setLightboxIdx] = useState<number | null>(null);
   const [slideKey, setSlideKey] = useState(0);
+  const [swiping, setSwiping] = useState(false);
+  const [matchPopup, setMatchPopup] = useState(false);
+
+  /* ═══════ MATCHES STATE ═══════ */
+  const [matches, setMatches] = useState<MatchItem[]>([]);
+  const [matchesLoading, setMatchesLoading] = useState(false);
+  const [matchesError, setMatchesError] = useState("");
+  const [expandedMatchId, setExpandedMatchId] = useState<number | null>(null);
 
   /* ─── Load swipe order on mount ─── */
   useEffect(() => {
@@ -55,12 +70,330 @@ const Discover = () => {
     }
   }, [swipeIds, currentIdx, fetchProfile]);
 
+  /* ─── Load matches when tab switches ─── */
+  const fetchMatches = useCallback(async () => {
+    setMatchesLoading(true);
+    setMatchesError("");
+    try {
+      const res = await matchService.getMatches();
+      setMatches(res.data.data);
+    } catch {
+      setMatchesError("Failed to load matches.");
+    } finally {
+      setMatchesLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (activeTab === "matches") {
+      fetchMatches();
+    }
+  }, [activeTab, fetchMatches]);
+
   /* ─── Swipe actions ─── */
-  const handleNext = () => {
+  const handleSwipe = async (action: "LIKE" | "DISLIKE") => {
+    if (swiping || !profileData) return;
+    setSwiping(true);
+    try {
+      const res = await swipeService.swipeAction(profileData.id, action);
+      const isMatch = res.data.data;
+      if (isMatch && action === "LIKE") {
+        setMatchPopup(true);
+      } else {
+        advanceProfile();
+      }
+    } catch {
+      setError("Failed to process swipe.");
+    } finally {
+      setSwiping(false);
+    }
+  };
+
+  const advanceProfile = () => {
     setSlideKey((k) => k + 1);
     setCurrentIdx((i) => i + 1);
     setLightboxIdx(null);
   };
+
+  const dismissMatchPopup = () => {
+    setMatchPopup(false);
+    advanceProfile();
+  };
+
+  /* ─── Helpers ─── */
+  const formatLabel = (val?: string) =>
+    val ? val.charAt(0).toUpperCase() + val.slice(1).toLowerCase() : "—";
+
+  const calcAge = (birthday: string): number | null => {
+    try {
+      const bd = new Date(birthday);
+      const now = new Date();
+      let age = now.getFullYear() - bd.getFullYear();
+      const m = now.getMonth() - bd.getMonth();
+      if (m < 0 || (m === 0 && now.getDate() < bd.getDate())) age--;
+      return age;
+    } catch {
+      return null;
+    }
+  };
+
+  const formatDateTime = (dateStr: string) => {
+    const d = new Date(dateStr);
+    return d.toLocaleString("vi-VN", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
+
+  const getStatusLabel = (status: string) => {
+    const map: Record<string, string> = {
+      AUTO: "Auto",
+      PENDING: "Pending",
+      CONFIRMED: "Confirmed",
+      CANCELLED: "Cancelled",
+      COMPLETED: "Completed",
+    };
+    return map[status] || status;
+  };
+
+  const getStatusClass = (status: string) => {
+    const map: Record<string, string> = {
+      AUTO: styles.badgeAuto,
+      PENDING: styles.badgePending,
+      CONFIRMED: styles.badgeConfirmed,
+      CANCELLED: styles.badgeCancelled,
+      COMPLETED: styles.badgeCompleted,
+    };
+    return map[status] || "";
+  };
+
+  /* ═══════════════════════════════════════
+     TAB BAR (always shown)
+     ═══════════════════════════════════════ */
+  const TabBar = (
+    <div className={styles.tabBar}>
+      <button
+        className={`${styles.tabBtn} ${activeTab === "discover" ? styles.tabBtnActive : ""}`}
+        onClick={() => setActiveTab("discover")}
+      >
+        Discover
+      </button>
+      <button
+        className={`${styles.tabBtn} ${activeTab === "matches" ? styles.tabBtnActive : ""}`}
+        onClick={() => setActiveTab("matches")}
+      >
+        Matches
+      </button>
+    </div>
+  );
+
+  /* ═══════════════════════════════════════
+     MATCHES TAB
+     ═══════════════════════════════════════ */
+  if (activeTab === "matches") {
+    return (
+      <>
+        <Header />
+        <div className={styles.pageWrapper}>
+          {TabBar}
+
+          {matchesLoading && (
+            <div
+              className={styles.loadingText}
+              style={{ textAlign: "center", padding: "3rem 0" }}
+            >
+              Loading matches…
+            </div>
+          )}
+
+          {matchesError && (
+            <div
+              className={styles.error}
+              style={{ maxWidth: "80%", margin: "0 auto" }}
+            >
+              {matchesError}
+            </div>
+          )}
+
+          {!matchesLoading && !matchesError && matches.length === 0 && (
+            <div className={styles.matchesContainer}>
+              <div className={styles.emptyCard}>
+                <div className={styles.emptyIcon}>💕</div>
+                <h2>No matches yet</h2>
+                <p>Keep swiping to find your match!</p>
+              </div>
+            </div>
+          )}
+
+          {!matchesLoading && matches.length > 0 && (
+            <div className={styles.matchesContainer}>
+              <div className={styles.matchesList}>
+                {matches.map((match) => {
+                  const user = match.user;
+                  const profile = user.profile;
+                  const photo = user.photos?.sort(
+                    (a, b) => a.displayOrder - b.displayOrder,
+                  )[0];
+                  const name =
+                    profile?.displayName ||
+                    `${profile?.firstName || ""} ${profile?.lastName || ""}`.trim() ||
+                    "Unknown";
+                  const age = profile?.birthday
+                    ? calcAge(profile.birthday)
+                    : null;
+                  const isExpanded = expandedMatchId === user.id;
+
+                  return (
+                    <div key={user.id} className={styles.matchCard}>
+                      <div className={styles.matchCardMain}>
+                        <div className={styles.matchCardPhoto}>
+                          {photo ? (
+                            <img src={photo.photoUrl} alt={name} />
+                          ) : (
+                            <div className={styles.matchCardInitial}>
+                              {name.charAt(0).toUpperCase()}
+                            </div>
+                          )}
+                        </div>
+                        <div className={styles.matchCardInfo}>
+                          <h3 className={styles.matchCardName}>
+                            {name}
+                            {age !== null && <span>, {age}</span>}
+                          </h3>
+                          {profile?.occupation && (
+                            <p className={styles.matchCardOccupation}>
+                              {profile.occupation}
+                            </p>
+                          )}
+                          {(profile?.city || profile?.country) && (
+                            <p className={styles.matchCardLocation}>
+                              📍{" "}
+                              {[profile?.city, profile?.country]
+                                .filter(Boolean)
+                                .join(", ")}
+                            </p>
+                          )}
+                          {match.schedules && match.schedules.length > 0 && (
+                            <span className={styles.scheduleBadgeCount}>
+                              {match.schedules.length} schedule
+                              {match.schedules.length > 1 ? "s" : ""}
+                            </span>
+                          )}
+                        </div>
+                        <button
+                          className={styles.matchDetailBtn}
+                          onClick={() =>
+                            setExpandedMatchId(isExpanded ? null : user.id)
+                          }
+                        >
+                          {isExpanded ? "Hide" : "Detail"}
+                        </button>
+                      </div>
+
+                      {/* ─── Expanded Schedule Detail ─── */}
+                      {isExpanded && (
+                        <div className={styles.scheduleSection}>
+                          {match.schedules && match.schedules.length > 0 ? (
+                            <>
+                              <div className={styles.scheduleSectionTitle}>
+                                Schedules
+                              </div>
+                              <div className={styles.scheduleList}>
+                                {match.schedules.map(
+                                  (schedule: MatchSchedule) => (
+                                    <div
+                                      key={schedule.id}
+                                      className={styles.scheduleItem}
+                                    >
+                                      <div
+                                        className={styles.scheduleItemHeader}
+                                      >
+                                        <span
+                                          className={`${styles.scheduleBadge} ${getStatusClass(schedule.status)}`}
+                                        >
+                                          {getStatusLabel(schedule.status)}
+                                        </span>
+                                        <span className={styles.scheduleRole}>
+                                          {schedule.isRequester
+                                            ? "You requested"
+                                            : "They requested"}
+                                        </span>
+                                      </div>
+                                      <div className={styles.scheduleItemBody}>
+                                        <div className={styles.scheduleDetail}>
+                                          <span className={styles.scheduleIcon}>
+                                            🕐
+                                          </span>
+                                          <span>
+                                            {formatDateTime(
+                                              schedule.scheduledAt,
+                                            )}
+                                          </span>
+                                        </div>
+                                        <div className={styles.scheduleDetail}>
+                                          <span className={styles.scheduleIcon}>
+                                            📍
+                                          </span>
+                                          <span>{schedule.location}</span>
+                                        </div>
+                                        {schedule.message && (
+                                          <div
+                                            className={styles.scheduleDetail}
+                                          >
+                                            <span
+                                              className={styles.scheduleIcon}
+                                            >
+                                              💬
+                                            </span>
+                                            <span>{schedule.message}</span>
+                                          </div>
+                                        )}
+                                        {schedule.status === "CANCELLED" &&
+                                          schedule.cancelReason && (
+                                            <div
+                                              className={`${styles.scheduleDetail} ${styles.cancelReason}`}
+                                            >
+                                              <span
+                                                className={styles.scheduleIcon}
+                                              >
+                                                ⚠️
+                                              </span>
+                                              <span>
+                                                Reason: {schedule.cancelReason}
+                                              </span>
+                                            </div>
+                                          )}
+                                      </div>
+                                    </div>
+                                  ),
+                                )}
+                              </div>
+                            </>
+                          ) : (
+                            <p className={styles.noSchedules}>
+                              No schedules yet.
+                            </p>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+        </div>
+        <Footer />
+      </>
+    );
+  }
+
+  /* ═══════════════════════════════════════
+     DISCOVER TAB
+     ═══════════════════════════════════════ */
 
   /* ─── Loading state ─── */
   if (loading) {
@@ -77,6 +410,7 @@ const Discover = () => {
       <>
         <Header />
         <div className={styles.pageWrapper}>
+          {TabBar}
           <div className={styles.discoverLayout}>
             <div className={styles.emptyCard}>
               <div className={styles.emptyIcon}>✨</div>
@@ -108,8 +442,6 @@ const Discover = () => {
     (a, b) => a.displayOrder - b.displayOrder,
   );
   const primaryPhoto = photos[0];
-  const availabilities: AvailabilityResponse[] =
-    profileData.availabilities ?? [];
 
   const initial =
     profile?.firstName?.charAt(0)?.toUpperCase() ||
@@ -117,27 +449,9 @@ const Discover = () => {
     "?";
 
   if (!profile) {
-    // User exists but has no profile — skip
-    handleNext();
+    advanceProfile();
     return null;
   }
-
-  /* ─── Helpers ─── */
-  const formatLabel = (val?: string) =>
-    val ? val.charAt(0).toUpperCase() + val.slice(1).toLowerCase() : "—";
-
-  const calcAge = (birthday: string): number | null => {
-    try {
-      const bd = new Date(birthday);
-      const now = new Date();
-      let age = now.getFullYear() - bd.getFullYear();
-      const m = now.getMonth() - bd.getMonth();
-      if (m < 0 || (m === 0 && now.getDate() < bd.getDate())) age--;
-      return age;
-    } catch {
-      return null;
-    }
-  };
 
   const age = calcAge(profile.birthday);
   const displayName =
@@ -173,6 +487,7 @@ const Discover = () => {
     <>
       <Header />
       <div className={styles.pageWrapper}>
+        {TabBar}
         <div className={styles.discoverLayout} key={slideKey}>
           {error && <div className={styles.error}>{error}</div>}
 
@@ -241,53 +556,6 @@ const Discover = () => {
                 </div>
               </div>
             )}
-
-            {/* Availability card */}
-            <div className={styles.infoCard}>
-              <div className={styles.cardHeader}>
-                <h3 className={styles.cardTitle}>Availability</h3>
-              </div>
-              {availabilities.length > 0 ? (
-                <div className={styles.availList}>
-                  {availabilities
-                    .filter((a) => a.isActive)
-                    .map((slot) => (
-                      <div key={slot.id} className={styles.availItem}>
-                        <div className={styles.availItemInfo}>
-                          <span className={styles.availItemDay}>
-                            {slot.isRecurring
-                              ? slot.dayOfWeek &&
-                                slot.dayOfWeek.charAt(0) +
-                                  slot.dayOfWeek.slice(1).toLowerCase()
-                              : slot.specificDate}
-                          </span>
-                          <span className={styles.availItemTime}>
-                            {slot.startTime} – {slot.endTime}
-                          </span>
-                          {slot.note && (
-                            <span className={styles.availItemNote}>
-                              {slot.note}
-                            </span>
-                          )}
-                        </div>
-                        <span
-                          className={`${styles.availItemBadge} ${
-                            slot.isRecurring
-                              ? styles.availBadgeRecurring
-                              : styles.availBadgeSpecific
-                          }`}
-                        >
-                          {slot.isRecurring ? "Recurring" : "One-time"}
-                        </span>
-                      </div>
-                    ))}
-                </div>
-              ) : (
-                <p className={styles.availEmpty}>
-                  No availability info shared yet.
-                </p>
-              )}
-            </div>
           </div>
 
           {/* ─── About (full width) ─── */}
@@ -340,14 +608,16 @@ const Discover = () => {
           <div className={`${styles.actionsRow} ${styles.fullWidth}`}>
             <button
               className={`${styles.actionBtn} ${styles.passBtn}`}
-              onClick={handleNext}
+              onClick={() => handleSwipe("DISLIKE")}
+              disabled={swiping}
               title="Pass"
             >
               ✕
             </button>
             <button
               className={`${styles.actionBtn} ${styles.likeBtn}`}
-              onClick={handleNext}
+              onClick={() => handleSwipe("LIKE")}
+              disabled={swiping}
               title="Like"
             >
               ♥
@@ -401,6 +671,28 @@ const Discover = () => {
             alt={`Photo ${lightboxIdx + 1}`}
             onClick={(e) => e.stopPropagation()}
           />
+        </div>
+      )}
+
+      {/* ─── Match Popup ─── */}
+      {matchPopup && (
+        <div className={styles.matchPopupOverlay} onClick={dismissMatchPopup}>
+          <div
+            className={styles.matchPopup}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className={styles.matchPopupIcon}>🎉</div>
+            <h2 className={styles.matchPopupTitle}>It's a Match!</h2>
+            <p className={styles.matchPopupText}>
+              You and <strong>{displayName}</strong> liked each other!
+            </p>
+            <button
+              className={styles.matchPopupBtn}
+              onClick={dismissMatchPopup}
+            >
+              Keep Swiping
+            </button>
+          </div>
         </div>
       )}
     </>

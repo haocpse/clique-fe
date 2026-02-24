@@ -245,11 +245,11 @@ const MyProfile = () => {
                 <span className={styles.infoLabel}>Email</span>
                 <span className={styles.infoValue}>{profileData.email}</span>
               </div>
-              {profile.phoneNumber && (
+              {profileData.phoneNumber && (
                 <div className={styles.infoRow}>
                   <span className={styles.infoLabel}>Phone</span>
                   <span className={styles.infoValue}>
-                    {profile.phoneNumber}
+                    {profileData.phoneNumber}
                   </span>
                 </div>
               )}

@@ -205,6 +205,7 @@ const CreateProfile = () => {
                 >
                   <option value="MALE">Male</option>
                   <option value="FEMALE">Female</option>
+                  <option value="NON_BINARY">Non Binary</option>
                   <option value="OTHER">Other</option>
                 </select>
               </div>
@@ -348,9 +349,9 @@ const CreateProfile = () => {
                   onChange={handleChange}
                 >
                   <option value="">Select...</option>
-                  <option value="NO">No</option>
-                  <option value="SOCIAL">Social</option>
-                  <option value="REGULAR">Regular</option>
+                  <option value="NEVER">No</option>
+                  <option value="SOCIALLY">Social</option>
+                  <option value="REGULARLY">Regular</option>
                 </select>
               </div>
               <div>
@@ -362,9 +363,9 @@ const CreateProfile = () => {
                   onChange={handleChange}
                 >
                   <option value="">Select...</option>
-                  <option value="NO">No</option>
-                  <option value="SOCIAL">Social</option>
-                  <option value="REGULAR">Regular</option>
+                  <option value="NEVER">No</option>
+                  <option value="SOCIALLY">Social</option>
+                  <option value="REGULARLY">Regular</option>
                 </select>
               </div>
             </div>

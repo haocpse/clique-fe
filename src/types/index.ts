@@ -18,3 +18,8 @@ export type {
   UserResponse,
   AuthenticationResponse,
 } from "./user.types";
+export type {
+  ScheduleStatus,
+  MatchSchedule,
+  MatchItem,
+} from "./match.types";
