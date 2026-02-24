@@ -12,6 +12,9 @@ export const matchService = {
   getMatches: () =>
     axiosClient.get<ApiResponse<MatchItem[]>>(`/match`),
 
+  getMatchById: (matchId: number) =>
+    axiosClient.get<ApiResponse<MatchItem>>(`/match/${matchId}`),
+
   addSchedule: (matchId: number, data: ScheduleRequest) =>
     axiosClient.post<ApiResponse<MatchSchedule>>(
       `/match/${matchId}/schedule`,

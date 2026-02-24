@@ -8,7 +8,6 @@ import { matchService } from "@/services/match.service";
 import type { UserResponse, MatchItem } from "@/types";
 import DiscoverTab from "./components/DiscoverTab";
 import MatchesTab from "./components/MatchesTab";
-import MatchDetailPopup from "./components/MatchDetailPopup";
 
 type TabType = "discover" | "matches";
 
@@ -30,7 +29,6 @@ const Discover = () => {
   const [matches, setMatches] = useState<MatchItem[]>([]);
   const [matchesLoading, setMatchesLoading] = useState(false);
   const [matchesError, setMatchesError] = useState("");
-  const [detailMatch, setDetailMatch] = useState<MatchItem | null>(null);
 
   /* ─── Load swipe order on mount ─── */
   useEffect(() => {
@@ -158,16 +156,6 @@ const Discover = () => {
     await removeCurrentCard();
   };
 
-  const handleMatchUpdate = (updatedMatch: MatchItem) => {
-    setMatches((prev) =>
-      prev.map((m) => (m.id === updatedMatch.id ? updatedMatch : m)),
-    );
-  };
-
-  const handleMatchRemove = (matchId: number) => {
-    setMatches((prev) => prev.filter((m) => m.id !== matchId));
-  };
-
   /* ═══════ TAB BAR ═══════ */
   const TabBar = (
     <div className={styles.tabBar}>
@@ -197,20 +185,10 @@ const Discover = () => {
             matches={matches}
             matchesLoading={matchesLoading}
             matchesError={matchesError}
-            onViewDetail={(match) => setDetailMatch(match)}
             styles={styles}
           />
         </div>
         <Footer />
-        {detailMatch && (
-          <MatchDetailPopup
-            detailMatch={detailMatch}
-            setDetailMatch={setDetailMatch}
-            onMatchUpdate={handleMatchUpdate}
-            onMatchRemove={handleMatchRemove}
-            styles={styles}
-          />
-        )}
       </>
     );
   }
@@ -233,7 +211,6 @@ const Discover = () => {
           {TabBar}
           <div className={styles.discoverLayout}>
             <div className={styles.emptyCard}>
-              <div className={styles.emptyIcon}>✨</div>
               <h2>No more profiles</h2>
               <p>Check back later for new people to discover!</p>
             </div>

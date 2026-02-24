@@ -1,13 +1,14 @@
 import type { MatchItem } from "@/types";
 import { calcAge } from "@/utils/profile";
+import { useNavigate } from "react-router-dom";
 
 interface MatchCardProps {
   match: MatchItem;
-  onViewDetail: (match: MatchItem) => void;
   styles: Record<string, string>;
 }
 
-const MatchCard = ({ match, onViewDetail, styles }: MatchCardProps) => {
+const MatchCard = ({ match, styles }: MatchCardProps) => {
+  const navigate = useNavigate();
   const user = match.user;
   const profile = user.profile;
   const photo = user.photos?.sort((a, b) => a.displayOrder - b.displayOrder)[0];
@@ -51,7 +52,11 @@ const MatchCard = ({ match, onViewDetail, styles }: MatchCardProps) => {
         </div>
         <button
           className={styles.matchDetailBtn}
-          onClick={() => onViewDetail(match)}
+          onClick={() =>
+            navigate(`/match/${match.id}`, {
+              state: { match },
+            })
+          }
         >
           View Detail
         </button>

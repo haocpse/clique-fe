@@ -1,29 +1,26 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import type { MatchItem, MatchSchedule } from "@/types";
 import type { ScheduleRequest } from "@/services/match.service";
 import { matchService } from "@/services/match.service";
 import { getDisplayName } from "@/utils/profile";
+import Header from "@/components/common/Header";
+import Footer from "@/components/common/Footer";
 import ProfileView from "@/components/ui/ProfileView";
-import ScheduleForm from "./ScheduleForm";
-import ScheduleList from "./ScheduleList";
+import ScheduleForm from "@/pages/Discover/components/ScheduleForm";
+import ScheduleList from "@/pages/Discover/components/ScheduleList";
+import styles from "./MatchDetail.module.css";
 
-interface MatchDetailPopupProps {
-  detailMatch: MatchItem;
-  setDetailMatch: (match: MatchItem | null) => void;
-  /** Update matches list when schedule changes */
-  onMatchUpdate: (updatedMatch: MatchItem) => void;
-  /** Remove match from list when unmatched */
-  onMatchRemove: (matchId: number) => void;
-  styles: Record<string, string>;
-}
+const MatchDetail = () => {
+  const { id } = useParams<{ id: string }>();
+  const location = useLocation();
+  const match = location.state?.match;
+  const navigate = useNavigate();
 
-const MatchDetailPopup = ({
-  detailMatch,
-  setDetailMatch,
-  onMatchUpdate,
-  onMatchRemove,
-  styles,
-}: MatchDetailPopupProps) => {
+  const [detailMatch, setDetailMatch] = useState<MatchItem | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
   const [detailLightboxIdx, setDetailLightboxIdx] = useState<number | null>(
     null,
   );
@@ -46,6 +43,54 @@ const MatchDetailPopup = ({
 
   const [showUnmatchConfirm, setShowUnmatchConfirm] = useState(false);
   const [unmatchLoading, setUnmatchLoading] = useState(false);
+
+  const fetchMatchDetail = useCallback(async () => {
+    if (!id) return;
+    setLoading(true);
+    setError("");
+    try {
+      const res = match;
+      setDetailMatch(res);
+    } catch {
+      setError("Failed to load match detail.");
+    } finally {
+      setLoading(false);
+    }
+  }, [id]);
+
+  useEffect(() => {
+    fetchMatchDetail();
+  }, [fetchMatchDetail]);
+
+  if (loading) {
+    return (
+      <>
+        <Header />
+        <div className={styles.loadingWrapper}>
+          <div className={styles.loadingText}>Loading detail...</div>
+        </div>
+        <Footer />
+      </>
+    );
+  }
+
+  if (error || !detailMatch) {
+    return (
+      <>
+        <Header />
+        <div className={styles.loadingWrapper}>
+          <div className={styles.errorText}>{error || "Match not found"}</div>
+          <button
+            className={styles.backBtn}
+            onClick={() => navigate("/discover")}
+          >
+            Back to Discover
+          </button>
+        </div>
+        <Footer />
+      </>
+    );
+  }
 
   const user = detailMatch.user;
   const profile = user.profile;
@@ -134,7 +179,6 @@ const MatchDetailPopup = ({
       }
 
       setDetailMatch(updatedMatch);
-      onMatchUpdate(updatedMatch);
       closeScheduleForm();
     } catch {
       setScheduleError("Failed to save schedule.");
@@ -151,8 +195,7 @@ const MatchDetailPopup = ({
     setUnmatchLoading(true);
     try {
       await matchService.unmatch(detailMatch.id);
-      onMatchRemove(detailMatch.id);
-      handleClose();
+      navigate("/discover"); // navigate back
     } catch {
       alert("Failed to unmatch. Please try again later.");
       setUnmatchLoading(false);
@@ -179,7 +222,6 @@ const MatchDetailPopup = ({
         ),
       };
       setDetailMatch(updatedMatch);
-      onMatchUpdate(updatedMatch);
     } catch {
       alert("Failed to update schedule status.");
     }
@@ -199,26 +241,21 @@ const MatchDetailPopup = ({
     setCancelScheduleItem(null);
   };
 
-  const handleClose = () => {
-    setDetailMatch(null);
-    setDetailLightboxIdx(null);
-    closeScheduleForm();
-    setCancelScheduleItem(null);
-  };
-
   return (
-    <div className={styles.matchDetailOverlay} onClick={handleClose}>
-      <div
-        className={styles.matchDetailModal}
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Close button */}
-        <button className={styles.matchDetailClose} onClick={handleClose}>
-          ✕
-        </button>
+    <>
+      <Header />
+      <div className={styles.pageWrapper}>
+        <div className={styles.maxWidthWrapper}>
+          <div className={styles.headerRow}>
+            <button
+              className={styles.backBtn}
+              onClick={() => navigate("/discover")}
+            >
+              ← Back
+            </button>
+            <h2 className={styles.pageTitle}>Match Detail</h2>
+          </div>
 
-        {/* Profile view */}
-        <div className={styles.matchDetailContent}>
           <ProfileView
             user={user}
             lightboxIdx={detailLightboxIdx}
@@ -274,24 +311,14 @@ const MatchDetailPopup = ({
           </div>
 
           {/* Unmatch Action */}
-          <div style={{ marginTop: "24px", textAlign: "center" }}>
-            <button
-              onClick={handleUnmatchClick}
-              style={{
-                background: "transparent",
-                color: "#ef4444",
-                border: "none",
-                cursor: "pointer",
-                fontSize: "14px",
-                fontWeight: "500",
-                padding: "8px 16px",
-              }}
-            >
+          <div className={styles.unmatchActionRow}>
+            <button className={styles.unmatchBtn} onClick={handleUnmatchClick}>
               Unmatch {displayName}
             </button>
           </div>
         </div>
       </div>
+      <Footer />
 
       {/* Cancel Schedule Popup */}
       {cancelScheduleItem && (
@@ -407,8 +434,8 @@ const MatchDetailPopup = ({
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 };
 
-export default MatchDetailPopup;
+export default MatchDetail;

@@ -74,16 +74,13 @@ const ScheduleList = ({
           </div>
           <div className={styles.scheduleItemBody}>
             <div className={styles.scheduleDetail}>
-              <span className={styles.scheduleIcon}>🕐</span>
               <span>{formatDateTime(schedule.scheduledAt)}</span>
             </div>
             <div className={styles.scheduleDetail}>
-              <span className={styles.scheduleIcon}>📍</span>
               <span>{schedule.location}</span>
             </div>
             {schedule.message && (
               <div className={styles.scheduleDetail}>
-                <span className={styles.scheduleIcon}>💬</span>
                 <span>{schedule.message}</span>
               </div>
             )}
@@ -91,7 +88,6 @@ const ScheduleList = ({
               <div
                 className={`${styles.scheduleDetail} ${styles.cancelReason}`}
               >
-                <span className={styles.scheduleIcon}>⚠️</span>
                 <span>Reason: {schedule.cancelReason}</span>
               </div>
             )}

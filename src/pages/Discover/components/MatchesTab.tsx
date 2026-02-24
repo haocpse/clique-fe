@@ -5,7 +5,6 @@ interface MatchesTabProps {
   matches: MatchItem[];
   matchesLoading: boolean;
   matchesError: string;
-  onViewDetail: (match: MatchItem) => void;
   styles: Record<string, string>;
 }
 
@@ -13,7 +12,6 @@ const MatchesTab = ({
   matches,
   matchesLoading,
   matchesError,
-  onViewDetail,
   styles,
 }: MatchesTabProps) => {
   if (matchesLoading) {
@@ -42,7 +40,6 @@ const MatchesTab = ({
     return (
       <div className={styles.matchesContainer}>
         <div className={styles.emptyCard}>
-          <div className={styles.emptyIcon}>💕</div>
           <h2>No matches yet</h2>
           <p>Keep swiping to find your match!</p>
         </div>
@@ -54,12 +51,7 @@ const MatchesTab = ({
     <div className={styles.matchesContainer}>
       <div className={styles.matchesList}>
         {matches.map((match) => (
-          <MatchCard
-            key={match.user.id}
-            match={match}
-            onViewDetail={onViewDetail}
-            styles={styles}
-          />
+          <MatchCard key={match.user.id} match={match} styles={styles} />
         ))}
       </div>
     </div>
