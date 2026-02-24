@@ -1,5 +1,5 @@
 import type { UserPhoto } from "@/types";
-import { calcAge } from "@/utils/profile";
+import { calcAge, getImageUrl } from "@/utils/profile";
 
 interface ProfileHeroCardProps {
   displayName: string;
@@ -28,7 +28,7 @@ const ProfileHeroCard = ({
     <div className={styles.heroCard}>
       {primaryPhoto ? (
         <img
-          src={primaryPhoto.photoUrl}
+          src={getImageUrl(primaryPhoto.photoUrl)}
           alt={displayName}
           className={styles.heroImage}
         />

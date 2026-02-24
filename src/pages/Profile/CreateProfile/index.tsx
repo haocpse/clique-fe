@@ -8,6 +8,7 @@ import { userService } from "@/services/user.service";
 import { ROUTES } from "@/constants";
 import type { CreateProfileRequest } from "@/types";
 import ProfileFormFields from "../components/ProfileFormFields";
+import ProfilePhotoUpload from "../components/ProfilePhotoUpload";
 
 const CreateProfile = () => {
   const navigate = useNavigate();
@@ -137,6 +138,8 @@ const CreateProfile = () => {
             styles={styles}
             showPlaceholders
           />
+
+          <ProfilePhotoUpload styles={styles} showPlaceholders />
 
           {/* Actions */}
           <div className={styles.actionsCard}>

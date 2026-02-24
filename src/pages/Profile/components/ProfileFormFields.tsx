@@ -312,28 +312,6 @@ const ProfileFormFields = ({
           </div>
         </div>
       </div>
-
-      {/* ─── Photos ─── */}
-      <div className={styles.formSectionCard}>
-        <h3 className={styles.sectionTitle}>Photos</h3>
-        <p
-          style={{
-            fontFamily: '"Plus Jakarta Sans", sans-serif',
-            fontSize: "0.8rem",
-            color: "rgba(255,255,255,0.4)",
-            margin: "0 0 0.75rem",
-          }}
-        >
-          {showPlaceholders
-            ? "You can add photos after creating your profile."
-            : "Manage your photos from the profile page."}
-        </p>
-        <div className={styles.photoGrid}>
-          <div className={styles.photoSlot}>+</div>
-          <div className={styles.photoSlot}>+</div>
-          <div className={styles.photoSlot}>+</div>
-        </div>
-      </div>
     </>
   );
 };

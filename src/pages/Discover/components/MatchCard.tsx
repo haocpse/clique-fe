@@ -1,5 +1,5 @@
 import type { MatchItem } from "@/types";
-import { calcAge } from "@/utils/profile";
+import { calcAge, getImageUrl } from "@/utils/profile";
 import { useNavigate } from "react-router-dom";
 
 interface MatchCardProps {
@@ -23,7 +23,7 @@ const MatchCard = ({ match, styles }: MatchCardProps) => {
       <div className={styles.matchCardMain}>
         <div className={styles.matchCardPhoto}>
           {photo ? (
-            <img src={photo.photoUrl} alt={name} />
+            <img src={getImageUrl(photo.photoUrl)} alt={name} />
           ) : (
             <div className={styles.matchCardInitial}>
               {name.charAt(0).toUpperCase()}

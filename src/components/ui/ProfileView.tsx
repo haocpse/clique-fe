@@ -1,5 +1,5 @@
 import type { UserResponse } from "@/types";
-import { formatLabel, calcAge } from "@/utils/profile";
+import { formatLabel, calcAge, getImageUrl } from "@/utils/profile";
 import Lightbox from "@/components/ui/Lightbox";
 
 interface ProfileViewProps {
@@ -64,7 +64,7 @@ const ProfileView = ({
         <div className={styles.heroCard}>
           {primaryPhoto ? (
             <img
-              src={primaryPhoto.photoUrl}
+              src={getImageUrl(primaryPhoto.photoUrl)}
               alt={displayName}
               className={styles.heroImage}
             />
@@ -155,7 +155,7 @@ const ProfileView = ({
                   onClick={() => setLightboxIdx(idx)}
                 >
                   <img
-                    src={photo.photoUrl}
+                    src={getImageUrl(photo.photoUrl)}
                     alt={`Photo ${idx + 1}`}
                     className={styles.galleryImg}
                   />

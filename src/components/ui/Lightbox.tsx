@@ -1,4 +1,5 @@
 import type { UserPhoto } from "@/types";
+import { getImageUrl } from "@/utils/profile";
 
 interface LightboxProps {
   photos: UserPhoto[];
@@ -45,7 +46,7 @@ const Lightbox = ({
         </>
       )}
       <img
-        src={photos[activeIndex].photoUrl}
+        src={getImageUrl(photos[activeIndex].photoUrl)}
         alt={`Photo ${activeIndex + 1}`}
         onClick={(e) => e.stopPropagation()}
       />

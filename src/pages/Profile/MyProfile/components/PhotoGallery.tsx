@@ -1,4 +1,5 @@
 import type { UserPhoto } from "@/types";
+import { getImageUrl } from "@/utils/profile";
 
 interface PhotoGalleryProps {
   photos: UserPhoto[];
@@ -24,7 +25,7 @@ const PhotoGallery = ({ photos, onPhotoClick, styles }: PhotoGalleryProps) => {
             onClick={() => onPhotoClick(idx)}
           >
             <img
-              src={photo.photoUrl}
+              src={getImageUrl(photo.photoUrl)}
               alt={`Photo ${idx + 1}`}
               className={styles.galleryImg}
             />

@@ -8,6 +8,7 @@ import { userService } from "@/services/user.service";
 import { ROUTES } from "@/constants";
 import type { CreateProfileRequest } from "@/types";
 import ProfileFormFields from "../components/ProfileFormFields";
+import ProfilePhotoUpload from "../components/ProfilePhotoUpload";
 
 const EditProfile = () => {
   const navigate = useNavigate();
@@ -181,6 +182,11 @@ const EditProfile = () => {
             form={form}
             handleChange={handleChange}
             styles={styles}
+          />
+
+          <ProfilePhotoUpload
+            styles={styles}
+            initialPhotos={user?.photos || []}
           />
 
           {/* Actions */}

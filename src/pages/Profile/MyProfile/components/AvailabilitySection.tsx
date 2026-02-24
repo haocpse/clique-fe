@@ -135,7 +135,6 @@ const AvailabilitySection = ({ styles }: AvailabilitySectionProps) => {
               className={styles.availInput}
               value={startTime}
               onChange={(e) => setStartTime(e.target.value)}
-              required
             />
           </div>
           <div className={styles.availField}>
@@ -145,7 +144,6 @@ const AvailabilitySection = ({ styles }: AvailabilitySectionProps) => {
               className={styles.availInput}
               value={endTime}
               onChange={(e) => setEndTime(e.target.value)}
-              required
             />
           </div>
         </div>

@@ -1,3 +1,5 @@
+import { env } from "@/config/env";
+
 /**
  * Shared profile utility helpers.
  * Used across Discover, MyProfile, and other profile-related pages.
@@ -67,3 +69,15 @@ export const getInitial = (
   profile?.firstName?.charAt(0)?.toUpperCase() ||
   email?.charAt(0)?.toUpperCase() ||
   "?";
+
+/** Get full image URL by prepending API BASE URL */
+export const getImageUrl = (url?: string): string => {
+  if (!url) return '';
+  if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('data:')) {
+    return url;
+  }
+  const baseUrl = env.API_BASE_URL.replace(/\/+$/, '');
+  const imagePath = url.startsWith('/') ? url.substring(1) : url;
+  // Based on common setups, if the API_BASE_URL is /api, we might need to adjust, but as requested:
+  return `${baseUrl}/${imagePath}`;
+};

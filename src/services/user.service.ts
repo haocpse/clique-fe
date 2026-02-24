@@ -5,6 +5,7 @@ import type {
   ApiResponse,
   AvailabilityRequest,
   AvailabilityResponse,
+  UserPhoto,
 } from "@/types";
 
 export const userService = {
@@ -28,4 +29,14 @@ export const userService = {
 
   getSwipeOrder: (page: number) =>
     axiosClient.get<ApiResponse<string>>(`/user/swipe-order?page=${page}`),
+
+  modifyUserPhoto: (data: FormData) =>
+    axiosClient.post<ApiResponse<UserPhoto>>(`/user/photo`, data, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }),
+
+  deleteUserPhoto: (id: number) =>
+    axiosClient.delete<ApiResponse<void>>(`/user/photo/${id}`),
 };
