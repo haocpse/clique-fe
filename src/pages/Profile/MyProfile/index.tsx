@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import styles from "./MyProfile.module.css";
 import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
-import { userService } from "@/services/user.service";
 import { ROUTES } from "@/constants";
 import type { UserResponse } from "@/types";
 import { getDisplayName, getInitial } from "@/utils/profile";
@@ -21,16 +20,10 @@ const MyProfile = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [lightboxIdx, setLightboxIdx] = useState<number | null>(null);
-
   useEffect(() => {
     const loadProfile = async () => {
       try {
-        const res = await userService.getMyProfile();
-        setProfileData(res.data.data);
-        const profile = res.data.data.profile;
-        if (!profile) {
-          navigate(ROUTES.PROFILE_CREATE);
-        }
+        setProfileData(JSON.parse(localStorage.getItem("profile")!));
       } catch {
         setError("Failed to load profile.");
       } finally {

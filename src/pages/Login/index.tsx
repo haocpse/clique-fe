@@ -5,6 +5,7 @@ import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
 import { useAuth } from "@/hooks/useAuth";
 import { ROUTES } from "@/constants";
+import { userService } from "@/services/user.service";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -28,7 +29,22 @@ const Login = () => {
     setLoading(true);
     try {
       await login({ email, password });
-      navigate(ROUTES.PROFILE_ME);
+      const res = await userService.getMyProfile();
+      let ids: number[];
+      if (!res.data.data.profile) {
+        navigate(ROUTES.PROFILE_CREATE);
+      }
+      localStorage.setItem("profile", JSON.stringify(res.data.data));
+      if (!res.data.data.swipeOrder) {
+        const swipeOrder = await userService.getSwipeOrder(
+          res.data.data.refreshSwipeTime!,
+        );
+        ids = JSON.parse(swipeOrder.data.data);
+      } else {
+        ids = JSON.parse(res.data.data.swipeOrder);
+      }
+      localStorage.setItem("swipeOrder", JSON.stringify(ids));
+      navigate(ROUTES.DISCOVER);
     } catch (err: any) {
       const msg =
         err.response?.data?.message || "Login failed. Please try again.";

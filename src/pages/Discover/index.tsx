@@ -36,11 +36,24 @@ const Discover = () => {
   useEffect(() => {
     const init = async () => {
       try {
-        const res = await userService.getMyProfile();
-        const raw = res.data.data.swipeOrder;
+        const stored = localStorage.getItem("profile");
+        if (!stored) return;
+        const profile = JSON.parse(stored);
+        const raw = profile.swipeOrder;
         if (raw) {
           const ids: number[] = JSON.parse(raw);
-          setSwipeIds(ids);
+          if (ids.length === 0) {
+            const swipeOrder = await userService.getSwipeOrder(
+              profile.refreshSwipeTime! + 1,
+            );
+            if (JSON.parse(swipeOrder.data.data).length > 0) {
+              profile.refreshSwipeTime! += 1;
+              localStorage.setItem("profile", JSON.stringify(profile));
+              setSwipeIds(JSON.parse(swipeOrder.data.data));
+            }
+          } else {
+            setSwipeIds(ids);
+          }
         }
       } catch {
         setError("Failed to load discover queue.");
@@ -95,10 +108,9 @@ const Discover = () => {
   /* ─── Skip users with no profile ─── */
   useEffect(() => {
     if (profileData && !profileData.profile && swipeIds.length > 0) {
-      setSwipeIds((ids) => ids.filter((id) => id !== profileData.id));
-      setSlideKey((k) => k + 1);
+      removeCurrentCard();
     }
-  }, [profileData, swipeIds]);
+  }, [profileData]);
 
   /* ─── Swipe actions ─── */
   const handleSwipe = async (action: "LIKE" | "DISLIKE") => {
@@ -106,21 +118,12 @@ const Discover = () => {
     setSwiping(true);
     try {
       const res = await swipeService.swipeAction(profileData.id, action);
-
-      const newSwipeIds = swipeIds.filter((_, idx) => idx !== currentIdx);
-      setSwipeIds(newSwipeIds);
-
-      try {
-        await swipeService.updateSwipeOrder(JSON.stringify(newSwipeIds));
-      } catch {
-        // Non-critical: swipeOrder sync failed
-      }
-
       const isMatch = res.data.data;
+      console.log(res.data.data);
       if (isMatch && action === "LIKE") {
         setMatchPopup(true);
       } else {
-        setSlideKey((k) => k + 1);
+        await removeCurrentCard();
       }
     } catch {
       setError("Failed to process swipe.");
@@ -129,15 +132,40 @@ const Discover = () => {
     }
   };
 
-  const dismissMatchPopup = () => {
-    setMatchPopup(false);
+  const removeCurrentCard = async () => {
+    const newSwipeIds = swipeIds.filter((_, idx) => idx !== currentIdx);
+    setSwipeIds(newSwipeIds);
     setSlideKey((k) => k + 1);
+
+    const storedProfile = localStorage.getItem("profile");
+    if (storedProfile) {
+      try {
+        const profile = JSON.parse(storedProfile);
+        profile.swipeOrder = JSON.stringify(newSwipeIds);
+        localStorage.setItem("profile", JSON.stringify(profile));
+      } catch (e) {
+        console.error("Failed to update swipeOrder in localStorage", e);
+      }
+    }
+
+    try {
+      await swipeService.updateSwipeOrder(newSwipeIds);
+    } catch {}
+  };
+
+  const dismissMatchPopup = async () => {
+    setMatchPopup(false);
+    await removeCurrentCard();
   };
 
   const handleMatchUpdate = (updatedMatch: MatchItem) => {
     setMatches((prev) =>
-      prev.map((m) => (m.user.id === updatedMatch.user.id ? updatedMatch : m)),
+      prev.map((m) => (m.id === updatedMatch.id ? updatedMatch : m)),
     );
+  };
+
+  const handleMatchRemove = (matchId: number) => {
+    setMatches((prev) => prev.filter((m) => m.id !== matchId));
   };
 
   /* ═══════ TAB BAR ═══════ */
@@ -179,6 +207,7 @@ const Discover = () => {
             detailMatch={detailMatch}
             setDetailMatch={setDetailMatch}
             onMatchUpdate={handleMatchUpdate}
+            onMatchRemove={handleMatchRemove}
             styles={styles}
           />
         )}

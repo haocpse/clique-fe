@@ -91,6 +91,7 @@ export interface UserResponse {
   email: string;
   phoneNumber?: string;
   swipeOrder?: string;
+  refreshSwipeTime?: number;
   profile?: UserProfile;
   photos: UserPhoto[];
   availabilities?: AvailabilityResponse[];

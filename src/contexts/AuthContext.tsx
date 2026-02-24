@@ -111,6 +111,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     localStorage.removeItem(STORAGE_KEYS.ACCESS_TOKEN);
     setToken(null);
     setUser(null);
+    localStorage.removeItem("profile");
+    localStorage.removeItem("swipeOrder");
   };
 
   return (

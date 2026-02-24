@@ -25,4 +25,7 @@ export const userService = {
       `/user/availability`,
       data
     ),
+
+  getSwipeOrder: (page: number) =>
+    axiosClient.get<ApiResponse<string>>(`/user/swipe-order?page=${page}`),
 };

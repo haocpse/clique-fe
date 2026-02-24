@@ -5,6 +5,12 @@ interface ScheduleListProps {
   schedules: MatchSchedule[];
   displayName: string;
   onEdit: (schedule: MatchSchedule) => void;
+  onAction: (
+    schedule: MatchSchedule,
+    action: "CONFIRMED" | "CANCELLED",
+    reason?: string,
+  ) => void;
+  onCancelClick: (schedule: MatchSchedule) => void;
   styles: Record<string, string>;
   /** CSS class getter for status badges */
   getStatusClass: (status: string) => string;
@@ -14,6 +20,8 @@ const ScheduleList = ({
   schedules,
   displayName,
   onEdit,
+  onAction,
+  onCancelClick,
   styles,
   getStatusClass,
 }: ScheduleListProps) => {
@@ -33,10 +41,32 @@ const ScheduleList = ({
                   ? "You requested"
                   : `${displayName} requested`}
               </span>
+              {schedule.status === "PENDING" && !schedule.isRequester && (
+                <button
+                  className={styles.scheduleEditBtn}
+                  onClick={() => onAction(schedule, "CONFIRMED")}
+                  title="Confirm"
+                  type="button"
+                >
+                  ✓
+                </button>
+              )}
+              {schedule.status !== "CANCELLED" &&
+                schedule.status !== "COMPLETED" && (
+                  <button
+                    className={styles.scheduleEditBtn}
+                    onClick={() => onCancelClick(schedule)}
+                    title="Cancel"
+                    type="button"
+                  >
+                    ✕
+                  </button>
+                )}
               <button
                 className={styles.scheduleEditBtn}
                 onClick={() => onEdit(schedule)}
                 title="Edit"
+                type="button"
               >
                 ✎
               </button>

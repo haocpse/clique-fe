@@ -19,6 +19,7 @@ export interface MatchSchedule {
 }
 
 export interface MatchItem {
+  id: number;
   user: UserResponse;
   schedules: MatchSchedule[];
 }

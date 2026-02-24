@@ -13,7 +13,18 @@ const Header = () => {
     navigate("/login");
   };
 
-  const initial = user?.email?.charAt(0)?.toUpperCase() || "?";
+  const storedUser = localStorage.getItem("profile");
+  let displayName = user?.email;
+  if (storedUser) {
+    try {
+      const parsed = JSON.parse(storedUser);
+      displayName = parsed?.profile?.displayName;
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  const initial = displayName?.charAt(0)?.toUpperCase() || "?";
 
   return (
     <header className="glass-header sticky top-0 z-50 w-full">
@@ -31,6 +42,17 @@ const Header = () => {
             Clique
           </h2>
         </Link>
+
+        {user && (
+          <nav className="hidden md:flex gap-6">
+            <Link
+              to="/discover"
+              className="text-sm font-semibold text-slate-300 hover:text-white transition"
+            >
+              Discover
+            </Link>
+          </nav>
+        )}
 
         {/* Right side */}
         <div className="flex items-center gap-4 relative">
@@ -75,16 +97,6 @@ const Header = () => {
               {/* Dropdown */}
               {open && (
                 <div className="absolute right-0 mt-3 w-44 rounded-xl bg-black/90 backdrop-blur border border-white/10 shadow-xl overflow-hidden">
-                  <button
-                    onClick={() => {
-                      navigate("/discover");
-                      setOpen(false);
-                    }}
-                    className="w-full px-4 py-2.5 text-left text-sm text-white hover:bg-white/10 transition"
-                  >
-                    Discover
-                  </button>
-
                   <button
                     onClick={() => {
                       navigate("/profile/me");
