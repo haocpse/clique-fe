@@ -6,4 +6,7 @@ export const swipeService = {
     axiosClient.post<ApiResponse<boolean>>(
       `/swipe/${userId}?action=${action}`
     ),
+
+  updateSwipeOrder: (swipeOrder: string) =>
+    axiosClient.put<ApiResponse<string>>(`/swipe-order`, { swipeOrder }),
 };

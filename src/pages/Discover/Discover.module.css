@@ -995,3 +995,282 @@
     min-width: 52px;
   }
 }
+
+/* ═══════════════════════════════════════════════════════
+   SWIPE ACTIONS WRAPPER (centered, outside grid)
+   ═══════════════════════════════════════════════════════ */
+.swipeActionsWrapper {
+  max-width: 80%;
+  margin: 1rem auto 0;
+}
+
+/* ═══════════════════════════════════════════════════════
+   MATCH DETAIL POPUP / MODAL
+   ═══════════════════════════════════════════════════════ */
+.matchDetailOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 3000;
+  background: rgba(0, 0, 0, 0.88);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 2rem;
+  overflow-y: auto;
+  animation: fadeIn 0.25s ease;
+  backdrop-filter: blur(8px);
+}
+
+.matchDetailModal {
+  position: relative;
+  width: 100%;
+  max-width: 900px;
+  background: linear-gradient(135deg, #0a0a0f 0%, #1a1025 50%, #0f0a1a 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+  padding: 2.5rem 2rem;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+  animation: popIn 0.3s ease;
+  margin: 2rem 0;
+}
+
+.matchDetailClose {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font-size: 1.2rem;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.matchDetailClose:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: scale(1.05);
+}
+
+.matchDetailContent {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* ─────────────────── Schedules inside modal ─────────────────── */
+.matchDetailSchedules {
+  background: rgba(21, 17, 29, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-top: 0.5rem;
+}
+
+.scheduleHeaderRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.addScheduleBtn {
+  padding: 0.45rem 1rem;
+  border: 1px solid rgba(72, 187, 120, 0.4);
+  border-radius: 10px;
+  background: rgba(72, 187, 120, 0.08);
+  color: rgba(134, 239, 172, 0.95);
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.addScheduleBtn:hover {
+  background: rgba(72, 187, 120, 0.18);
+  border-color: rgba(72, 187, 120, 0.6);
+  box-shadow: 0 0 12px rgba(72, 187, 120, 0.12);
+}
+
+.scheduleHeaderRight {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.scheduleEditBtn {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  border: 1px solid rgba(243, 206, 131, 0.2);
+  background: rgba(243, 206, 131, 0.06);
+  color: rgba(243, 206, 131, 0.8);
+  font-size: 0.85rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.scheduleEditBtn:hover {
+  background: rgba(243, 206, 131, 0.15);
+  border-color: rgba(243, 206, 131, 0.4);
+  transform: scale(1.05);
+}
+
+/* ─────────────────── Schedule Form ─────────────────── */
+.scheduleFormCard {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(243, 206, 131, 0.15);
+  border-radius: 14px;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+  animation: fadeIn 0.2s ease;
+}
+
+.scheduleFormTitle {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: rgba(243, 206, 131, 0.9);
+  margin: 0 0 1rem;
+}
+
+.scheduleFormFields {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.formLabel {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.formInput {
+  padding: 0.6rem 0.85rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.04);
+  color: #ffffff;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 0.85rem;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.formInput:focus {
+  border-color: rgba(243, 206, 131, 0.4);
+  box-shadow: 0 0 0 3px rgba(243, 206, 131, 0.06);
+}
+
+.formInput::placeholder {
+  color: rgba(255, 255, 255, 0.25);
+}
+
+/* datetime-local color fix for dark theme */
+.formInput::-webkit-calendar-picker-indicator {
+  filter: invert(0.8);
+  cursor: pointer;
+}
+
+.scheduleFormError {
+  margin-top: 0.6rem;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 0.78rem;
+  color: rgb(252, 130, 130);
+}
+
+.scheduleFormActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+  margin-top: 1rem;
+}
+
+.scheduleFormCancel {
+  padding: 0.5rem 1.2rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.6);
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 0.78rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.scheduleFormCancel:hover {
+  color: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.scheduleFormSave {
+  padding: 0.5rem 1.5rem;
+  border: 1px solid rgba(72, 187, 120, 0.4);
+  border-radius: 10px;
+  background: linear-gradient(135deg, rgba(72, 187, 120, 0.15), rgba(72, 187, 120, 0.05));
+  color: rgba(134, 239, 172, 0.95);
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.scheduleFormSave:hover {
+  background: linear-gradient(135deg, rgba(72, 187, 120, 0.25), rgba(72, 187, 120, 0.1));
+  border-color: rgba(72, 187, 120, 0.6);
+  box-shadow: 0 0 16px rgba(72, 187, 120, 0.12);
+}
+
+.scheduleFormSave:disabled,
+.scheduleFormCancel:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ─────────────────── Responsive – Detail Popup ─────────────────── */
+@media (max-width: 768px) {
+  .matchDetailOverlay {
+    padding: 1rem;
+  }
+
+  .matchDetailModal {
+    padding: 1.5rem 1rem;
+    border-radius: 18px;
+  }
+
+  .scheduleFormFields {
+    gap: 0.6rem;
+  }
+
+  .scheduleFormActions {
+    flex-direction: column;
+  }
+
+  .scheduleFormCancel,
+  .scheduleFormSave {
+    width: 100%;
+    text-align: center;
+  }
+}
