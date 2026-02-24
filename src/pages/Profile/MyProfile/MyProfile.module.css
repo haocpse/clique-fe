@@ -816,6 +816,158 @@
   margin: 0.5rem 0;
 }
 
+/* ─────────────────── Calendar ─────────────────── */
+.calendarContainer {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 1rem;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  margin-bottom: 0.5rem;
+}
+
+.calendarHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.calendarNavBtn {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 1rem;
+  cursor: pointer;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.calendarNavBtn:hover {
+  background: rgba(243, 206, 131, 0.2);
+  color: rgb(243, 206, 131);
+}
+
+.calendarTitle {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.calendarGrid {
+  display: grid;
+  grid-template-columns: repeat(7, 100px);
+  gap: 0.1rem;
+  justify-content: center;
+  text-align: center;
+}
+
+.calendarDayName {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+}
+
+.calendarDay {
+  width: 100%;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  border-radius: 50%;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.9);
+  transition: all 0.2s;
+  position: relative;
+  background: transparent;
+  border: 1px solid transparent;
+}
+
+.calendarDay:hover:not(.calendarDayEmpty) {
+  background: rgba(243, 206, 131, 0.15);
+}
+
+.calendarDaySelected {
+  background: rgb(243, 206, 131) !important;
+  color: #0a0a0f !important;
+  font-weight: 700;
+}
+
+.calendarDayDisabled {
+  opacity: 0.25;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.calendarDaySpecificAdded {
+  border-color: rgba(154, 230, 180, 0.5); /* One-time */
+}
+
+.calendarDaySpecificAdded::after {
+  content: '';
+  position: absolute;
+  bottom: 0px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgb(154, 230, 180);
+}
+
+.calendarDayRecurringAdded {
+  border-color: rgba(99, 179, 237, 0.5); /* Recurring */
+}
+
+.calendarDayRecurringAdded::after {
+  content: '';
+  position: absolute;
+  bottom: 0px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgb(99, 179, 237);
+}
+
+.calendarDaySelected.calendarDaySpecificAdded::after,
+.calendarDaySelected.calendarDayRecurringAdded::after {
+  background: #0a0a0f;
+}
+
+.calendarDayEmpty {
+  cursor: default;
+}
+
+.availDeleteBtn {
+  padding: 0.7rem 1.5rem;
+  border-radius: 10px;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  cursor: pointer;
+  background: rgba(239, 68, 68, 0.08);
+  color: rgb(252, 165, 165);
+  transition: all 0.25s ease;
+  align-self: flex-start;
+}
+
+.availDeleteBtn:hover:not(:disabled) {
+  background: rgba(239, 68, 68, 0.15);
+  border-color: rgba(239, 68, 68, 0.4);
+}
+
+.availDeleteBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 /* ─────────────────── Responsive ─────────────────── */
 @media (max-width: 768px) {
   .profileLayout {

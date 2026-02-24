@@ -39,4 +39,13 @@ export const userService = {
 
   deleteUserPhoto: (id: number) =>
     axiosClient.delete<ApiResponse<void>>(`/user/photo/${id}`),
+
+  updateAvailability: (id: number, data: AvailabilityRequest) =>
+    axiosClient.put<ApiResponse<AvailabilityResponse>>(
+      `/user/availability/${id}`,
+      data
+    ),
+
+  deleteAvailability: (id: number) =>
+    axiosClient.delete<ApiResponse<void>>(`/user/availability/${id}`),
 };
