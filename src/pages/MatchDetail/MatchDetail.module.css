@@ -719,3 +719,153 @@
     border-radius: 18px;
   }
 }
+
+/* ─────────────────── Calendar Schedule List ─────────────────── */
+.scheduleCalendarWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.calendarContainer {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 1rem;
+  font-family: "Plus Jakarta Sans", sans-serif;
+}
+
+.calendarHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.calendarNavBtn {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 1rem;
+  cursor: pointer;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.calendarNavBtn:hover {
+  background: rgba(243, 206, 131, 0.2);
+  color: rgb(243, 206, 131);
+}
+
+.calendarTitle {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.calendarGrid {
+  display: grid;
+  grid-template-columns: repeat(7, 100px);
+  gap: 0.1rem;
+  justify-content: center;
+  text-align: center;
+}
+
+.calendarDayName {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+}
+
+.calendarDay {
+  width: 100%;
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  border-radius: 8px;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.9);
+  transition: all 0.2s;
+  background: transparent;
+  border: 1px solid transparent;
+  position: relative;
+}
+
+.calendarDay:hover:not(.calendarDayEmpty) {
+  background: rgba(243, 206, 131, 0.15);
+}
+
+.calendarDaySelected {
+  border-color: rgba(243, 206, 131, 0.6) !important;
+  background: rgba(243, 206, 131, 0.15) !important;
+  font-weight: 700;
+}
+
+.calendarDayHasSchedule {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.calendarDayEmpty {
+  cursor: default;
+}
+
+.calendarDayNumber {
+  margin-bottom: 2px;
+}
+
+.calendarDotsRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  height: 6px;
+}
+
+.calendarDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #fff; /* fallback */
+}
+
+.calendarDotMore {
+  font-size: 0.5rem;
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: bold;
+}
+
+/* Dots based on status */
+.dotConfirmed { background: rgb(134, 239, 172); box-shadow: 0 0 4px rgba(72, 187, 120, 0.5); }
+.dotPending { background: rgb(245, 200, 100); box-shadow: 0 0 4px rgba(245, 185, 60, 0.5); }
+.dotCancelled { background: rgb(252, 130, 130); box-shadow: 0 0 4px rgba(239, 68, 68, 0.5); }
+.dotCompleted { background: rgb(144, 205, 244); box-shadow: 0 0 4px rgba(99, 179, 237, 0.5); }
+.dotAuto { background: rgb(178, 147, 252); box-shadow: 0 0 4px rgba(139, 92, 246, 0.5); }
+
+.selectedDaySchedules {
+  background: rgba(21, 17, 29, 0.5);
+  border: 1px solid rgba(243, 206, 131, 0.15);
+  border-radius: 12px;
+  padding: 1.25rem;
+  animation: fadeIn 0.3s ease;
+}
+
+.selectedDayTitle {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: rgba(243, 206, 131, 0.9);
+  margin: 0 0 1rem;
+  border-bottom: 1px solid rgba(243, 206, 131, 0.1);
+  padding-bottom: 0.5rem;
+}

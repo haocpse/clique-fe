@@ -107,9 +107,13 @@ const MatchDetail = () => {
     return map[status] || "";
   };
 
-  const openAddSchedule = () => {
+  const openAddSchedule = (selectedDate: string) => {
     setEditingSchedule(null);
-    setScheduleForm({ scheduledAt: "", location: "", message: "" });
+    setScheduleForm({
+      scheduledAt: `${selectedDate}T12:00`,
+      location: "",
+      message: "",
+    });
     setScheduleError("");
     setCancelScheduleItem(null);
     setShowScheduleForm(true);
@@ -147,7 +151,7 @@ const MatchDetail = () => {
     setScheduleError("");
 
     try {
-      const isoDate = new Date(scheduleForm.scheduledAt).toISOString();
+      const isoDate = scheduleForm.scheduledAt;
       const payload: ScheduleRequest = {
         scheduledAt: isoDate,
         location: scheduleForm.location,
@@ -265,16 +269,6 @@ const MatchDetail = () => {
 
           {/* Schedules Section */}
           <div className={styles.matchDetailSchedules}>
-            <div className={styles.scheduleHeaderRow}>
-              <h3 className={styles.cardTitle}>Schedules</h3>
-              <button
-                className={styles.addScheduleBtn}
-                onClick={openAddSchedule}
-              >
-                + Add Schedule
-              </button>
-            </div>
-
             {/* Schedule form */}
             {showScheduleForm && (
               <ScheduleForm
@@ -290,24 +284,16 @@ const MatchDetail = () => {
             )}
 
             {/* Schedule list */}
-            {detailMatch.schedules && detailMatch.schedules.length > 0 ? (
-              <ScheduleList
-                schedules={detailMatch.schedules}
-                displayName={displayName}
-                onEdit={openEditSchedule}
-                onAction={handleScheduleAction}
-                onCancelClick={openCancelPopup}
-                styles={styles}
-                getStatusClass={getStatusClass}
-              />
-            ) : (
-              !showScheduleForm &&
-              !cancelScheduleItem && (
-                <p className={styles.noSchedules}>
-                  No schedules yet. Click "Add Schedule" to create one.
-                </p>
-              )
-            )}
+            <ScheduleList
+              schedules={detailMatch.schedules || []}
+              displayName={displayName}
+              onAddClick={openAddSchedule}
+              onEdit={openEditSchedule}
+              onAction={handleScheduleAction}
+              onCancelClick={openCancelPopup}
+              styles={styles}
+              getStatusClass={getStatusClass}
+            />
           </div>
 
           {/* Unmatch Action */}
