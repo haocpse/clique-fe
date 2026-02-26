@@ -30,6 +30,21 @@ const Discover = () => {
   const [matchesLoading, setMatchesLoading] = useState(false);
   const [matchesError, setMatchesError] = useState("");
 
+  /* ─── Fetch profile for current swipe index ─── */
+  const fetchProfile = useCallback(async (id: number) => {
+    setProfileLoading(true);
+    setError("");
+    try {
+      const res = await userService.getUserById(id);
+      setProfileData(res.data.data);
+    } catch {
+      setError("Failed to load profile.");
+      setProfileData(null);
+    } finally {
+      setProfileLoading(false);
+    }
+  }, []);
+
   /* ─── Load swipe order on mount ─── */
   useEffect(() => {
     const init = async () => {
@@ -47,10 +62,13 @@ const Discover = () => {
             if (JSON.parse(swipeOrder.data.data).length > 0) {
               profile.refreshSwipeTime! += 1;
               localStorage.setItem("profile", JSON.stringify(profile));
-              setSwipeIds(JSON.parse(swipeOrder.data.data));
+              const newIds: number[] = JSON.parse(swipeOrder.data.data);
+              setSwipeIds(newIds);
+              fetchProfile(newIds[currentIdx]);
             }
           } else {
             setSwipeIds(ids);
+            fetchProfile(ids[currentIdx]);
           }
         }
       } catch {
@@ -60,28 +78,7 @@ const Discover = () => {
       }
     };
     init();
-  }, []);
-
-  /* ─── Fetch profile for current swipe index ─── */
-  const fetchProfile = useCallback(async (id: number) => {
-    setProfileLoading(true);
-    setError("");
-    try {
-      const res = await userService.getUserById(id);
-      setProfileData(res.data.data);
-    } catch {
-      setError("Failed to load profile.");
-      setProfileData(null);
-    } finally {
-      setProfileLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (swipeIds.length > 0 && currentIdx < swipeIds.length) {
-      fetchProfile(swipeIds[currentIdx]);
-    }
-  }, [swipeIds, currentIdx, fetchProfile]);
+  }, [fetchProfile, currentIdx]);
 
   /* ─── Load matches when tab switches ─── */
   const fetchMatches = useCallback(async () => {
@@ -131,14 +128,32 @@ const Discover = () => {
   };
 
   const removeCurrentCard = async () => {
-    const newSwipeIds = swipeIds.filter((_, idx) => idx !== currentIdx);
-    setSwipeIds(newSwipeIds);
+    let newSwipeIds = swipeIds.filter((_, idx) => idx !== currentIdx);
     setSlideKey((k) => k + 1);
 
     const storedProfile = localStorage.getItem("profile");
-    if (storedProfile) {
+    let profile = storedProfile ? JSON.parse(storedProfile) : null;
+
+    if (newSwipeIds.length === 0 && profile) {
       try {
-        const profile = JSON.parse(storedProfile);
+        const nextTime = (profile.refreshSwipeTime || 0) + 1;
+        const swipeOrderRes = await userService.getSwipeOrder(nextTime);
+        const nextIds = JSON.parse(swipeOrderRes.data.data) as number[];
+        
+        if (nextIds.length > 0) {
+          newSwipeIds = nextIds;
+          profile.refreshSwipeTime = nextTime;
+          fetchProfile(nextIds[currentIdx]);
+        }
+      } catch (err) {
+        console.error("Failed to fetch next swipe order", err);
+      }
+    }
+
+    setSwipeIds(newSwipeIds);
+
+    if (profile) {
+      try {
         profile.swipeOrder = JSON.stringify(newSwipeIds);
         localStorage.setItem("profile", JSON.stringify(profile));
       } catch (e) {

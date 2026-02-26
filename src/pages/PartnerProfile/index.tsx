@@ -147,20 +147,44 @@ const PartnerProfile = () => {
               {schedulesLoading ? (
                 <p className="text-center text-white/50">Loading schedules...</p>
               ) : schedules.length > 0 ? (
-                <div className="space-y-4">
-                  {schedules.map(schedule => (
-                    <div key={schedule.id} className="p-4 rounded-lg bg-black/40 border border-white/10 flex flex-col space-y-2">
-                       <div className="flex justify-between items-start">
-                         <div className="font-semibold text-gold">{new Date(schedule.scheduledAt).toLocaleString()}</div>
-                         <span className={`px-2 py-1 text-xs rounded-full font-semibold ${
-                           schedule.status === 'CONFIRMED' ? 'bg-green-500/20 text-green-400 border border-green-500/30' :
-                           schedule.status === 'CANCELLED' ? 'bg-red-500/20 text-red-400 border border-red-500/30' :
-                           schedule.status === 'COMPLETED' ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30' :
-                           'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30'
-                         }`}>{schedule.status}</span>
-                       </div>
-                       <div className="text-sm text-white/80"><span className="text-white/40">Location:</span> {schedule.location}</div>
-                       {schedule.message && <div className="text-sm text-white/80"><span className="text-white/40">Message:</span> {schedule.message}</div>}
+                <div className="space-y-6">
+                  {Object.entries(
+                    schedules.reduce((acc, schedule) => {
+                      const date = new Date(schedule.scheduledAt).toLocaleDateString(undefined, {
+                        weekday: 'long',
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                      });
+                      if (!acc[date]) acc[date] = [];
+                      acc[date].push(schedule);
+                      return acc;
+                    }, {} as Record<string, MatchSchedule[]>)
+                  ).map(([date, daySchedules]) => (
+                    <div key={date}>
+                      <h3 className="text-lg font-bold text-gold mb-3 border-b border-white/10 pb-2">{date}</h3>
+                      <div className="space-y-3">
+                        {daySchedules.map(schedule => (
+                          <div key={schedule.id} className="p-4 rounded-lg bg-black/40 border border-white/10 flex flex-col space-y-2">
+                            <div className="flex justify-between items-start">
+                              <div className="font-semibold text-white/90">
+                                {new Date(schedule.scheduledAt).toLocaleTimeString(undefined, {
+                                  hour: '2-digit',
+                                  minute: '2-digit'
+                                })}
+                              </div>
+                              <span className={`px-2 py-1 text-xs rounded-full font-semibold ${
+                                schedule.status === 'CONFIRMED' ? 'bg-green-500/20 text-green-400 border border-green-500/30' :
+                                schedule.status === 'CANCELLED' ? 'bg-red-500/20 text-red-400 border border-red-500/30' :
+                                schedule.status === 'COMPLETED' ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30' :
+                                'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30'
+                              }`}>{schedule.status}</span>
+                            </div>
+                            <div className="text-sm text-white/80"><span className="text-white/40">Location:</span> {schedule.location}</div>
+                            {schedule.message && <div className="text-sm text-white/80"><span className="text-white/40">Message:</span> {schedule.message}</div>}
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   ))}
                 </div>

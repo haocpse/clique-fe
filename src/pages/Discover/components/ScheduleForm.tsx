@@ -26,6 +26,7 @@ const ScheduleForm = ({
   styles,
 }: ScheduleFormProps) => {
   const [partners, setPartners] = useState<PartnerResponse[]>([]);
+  const [showPartnerDetails, setShowPartnerDetails] = useState(false);
 
   useEffect(() => {
     const fetchPartners = async () => {
@@ -67,6 +68,7 @@ const ScheduleForm = ({
               type="datetime-local"
               className={styles.formInput}
               value={scheduleForm.scheduledAt}
+              min={new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16)}
               onChange={(e) =>
                 setScheduleForm((f) => ({
                   ...f,
@@ -110,12 +112,16 @@ const ScheduleForm = ({
             <select
               className={styles.formInput}
               value={scheduleForm.partnerId || ""}
-              onChange={(e) =>
+              onChange={(e) => {
+                const newPartnerId = e.target.value ? Number(e.target.value) : undefined;
+                const newPartner = partners.find(p => p.id === newPartnerId);
                 setScheduleForm((f) => ({
                   ...f,
-                  partnerId: e.target.value ? Number(e.target.value) : undefined,
-                }))
-              }
+                  partnerId: newPartnerId,
+                  location: newPartner?.address ? newPartner.address : f.location,
+                }));
+                setShowPartnerDetails(false);
+              }}
             >
               <option value="">Select a partner</option>
               {partners.map((partner) => (
@@ -144,8 +150,29 @@ const ScheduleForm = ({
                     <span style={{ marginTop: "2px" }}>📍</span> 
                     {selectedPartner.address || "No address provided"}
                   </p>
+                  <button 
+                    type="button"
+                    onClick={(e) => { e.preventDefault(); setShowPartnerDetails(!showPartnerDetails); }}
+                    style={{ marginTop: "0.5rem", fontSize: "0.8rem", color: "#f3ce83", background: "none", border: "none", padding: 0, cursor: "pointer", textDecoration: "underline", textAlign: "left" }}
+                  >
+                    {showPartnerDetails ? "Hide Details" : "View Details"}
+                  </button>
                 </div>
               </div>
+              {showPartnerDetails && (
+                <div style={{ marginTop: "1rem", paddingTop: "1rem", borderTop: "1px solid rgba(255,255,255,0.1)", fontSize: "0.85rem", color: "rgba(255,255,255,0.8)", display: "flex", flexDirection: "column", gap: "0.5rem", fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+                  {selectedPartner.description && <p style={{ margin: 0 }}><strong>Description:</strong> {selectedPartner.description}</p>}
+                  {selectedPartner.phone && <p style={{ margin: 0 }}><strong>Phone:</strong> {selectedPartner.phone}</p>}
+                  {selectedPartner.website && (
+                    <p style={{ margin: 0 }}>
+                      <strong>Website:</strong> <a href={selectedPartner.website} target="_blank" rel="noopener noreferrer" style={{ color: "#3b82f6" }}>{selectedPartner.website}</a>
+                    </p>
+                  )}
+                  {!selectedPartner.description && !selectedPartner.phone && !selectedPartner.website && (
+                    <p style={{ margin: 0, fontStyle: "italic", color: "rgba(255,255,255,0.5)" }}>No additional details available.</p>
+                  )}
+                </div>
+              )}
             </div>
           )}
         </div>

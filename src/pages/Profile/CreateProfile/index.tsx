@@ -139,7 +139,10 @@ const CreateProfile = () => {
             showPlaceholders
           />
 
-          <ProfilePhotoUpload styles={styles} showPlaceholders />
+          <ProfilePhotoUpload
+            styles={styles}
+            initialPhotos={user?.photos || []}
+          />
 
           {/* Actions */}
           <div className={styles.actionsCard}>

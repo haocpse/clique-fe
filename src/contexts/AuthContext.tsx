@@ -67,7 +67,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (!userId) return;
     try {
       const res = await userService.getMyProfile();
-      setUser(res.data.data);
+      const userData = res.data.data;
+
+      if (userData.profile && !userData.swipeOrder) {
+        try {
+          const nextTime = (userData.refreshSwipeTime || 0) + 1;
+          const swipeRes = await userService.getSwipeOrder(nextTime);
+          userData.swipeOrder = swipeRes.data.data;
+          userData.refreshSwipeTime = nextTime;
+        } catch (err) {
+          console.error("Failed to get initial swipe order", err);
+        }
+      }
+
+      setUser(userData);
+      localStorage.setItem("profile", JSON.stringify(userData));
     } catch {
       // silently fail
     }
