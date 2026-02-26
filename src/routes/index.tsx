@@ -11,6 +11,7 @@ import MatchDetail from "@/pages/MatchDetail";
 import NotFoundPage from "@/pages/NotFound";
 import ProtectedRoute from "@/components/common/ProtectedRoute";
 import GuestRoute from "@/components/common/GuestRoute";
+import PartnerRegister from "@/pages/PartnerRegister";
 
 export const router = createBrowserRouter([
   {
@@ -36,6 +37,10 @@ export const router = createBrowserRouter([
         <Register />
       </GuestRoute>
     ),
+  },
+  {
+    path: "/partner/register",
+    element: <PartnerRegister />,
   },
   {
     path: "/profile/create",

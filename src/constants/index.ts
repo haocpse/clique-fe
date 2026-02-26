@@ -10,6 +10,7 @@ export const ROUTES = {
   PROFILE_CREATE: "/profile/create",
   PROFILE_EDIT: "/profile/edit",
   PROFILE_ME: "/profile/me",
+  PARTNER_REGISTER: "/partner/register",
 } as const;
 
 export const API_ENDPOINTS = {

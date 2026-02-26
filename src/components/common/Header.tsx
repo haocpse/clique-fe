@@ -67,10 +67,10 @@ const Header = () => {
               </Link>
 
               <Link
-                to="/login"
+                to="/partner/register"
                 className="rounded-full bg-gradient-to-r from-gold to-gold-soft px-6 py-2.5 text-sm font-bold text-black hover:brightness-110 transition-all shadow-lg shadow-gold/20"
               >
-                Get Started
+                Become Partner
               </Link>
             </>
           )}

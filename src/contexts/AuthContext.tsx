@@ -2,7 +2,7 @@ import { createContext, useState, useEffect, type ReactNode } from "react";
 import { authService } from "@/services/auth.service";
 import { userService } from "@/services/user.service";
 import { STORAGE_KEYS } from "@/constants";
-import type { LoginRequest, RegisterRequest, UserResponse } from "@/types";
+import type { LoginRequest, RegisterRequest, PartnerRegisterRequest, UserResponse } from "@/types";
 
 interface AuthContextType {
   user: UserResponse | null;
@@ -11,6 +11,7 @@ interface AuthContextType {
   isLoading: boolean;
   login: (data: LoginRequest) => Promise<void>;
   register: (data: RegisterRequest) => Promise<void>;
+  registerPartner: (data: PartnerRegisterRequest) => Promise<void>;
   logout: () => void;
   refreshUser: () => Promise<void>;
 }
@@ -107,6 +108,22 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const registerPartner = async (data: PartnerRegisterRequest) => {
+    const res = await authService.registerPartner(data);
+    const jwt = res.data.data.token;
+    localStorage.setItem(STORAGE_KEYS.ACCESS_TOKEN, jwt);
+    setToken(jwt);
+
+    const userId = decodeTokenUserId(jwt);
+    if (userId) {
+      setUser({
+        id: userId,
+        email: data.email,
+        photos: [],
+      });
+    }
+  };
+
   const logout = () => {
     localStorage.removeItem(STORAGE_KEYS.ACCESS_TOKEN);
     setToken(null);
@@ -124,6 +141,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         isLoading,
         login,
         register,
+        registerPartner,
         logout,
         refreshUser,
       }}

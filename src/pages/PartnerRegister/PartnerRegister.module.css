@@ -1,0 +1,256 @@
+.registerWrapper {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #0a0a0a;
+  padding: 1rem;
+}
+
+.registerCard {
+  width: 80%;
+  background: linear-gradient(
+    145deg,
+    rgba(30, 30, 30, 0.9) 0%,
+    rgba(20, 20, 20, 0.95) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 3rem 2.5rem;
+  box-shadow:
+    0 25px 60px rgba(0, 0, 0, 0.5),
+    0 0 80px rgba(243, 206, 131, 0.03);
+}
+
+.title {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #ffffff;
+  text-align: center;
+  margin: 0 0 0.5rem;
+  font-style: italic;
+}
+
+.stepIndicator {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: rgb(243, 206, 131);
+  text-align: center;
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.subtitle {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.5);
+  text-align: center;
+  margin: 0 0 2rem;
+  font-weight: 400;
+}
+
+/* Form fields */
+.inputGroup {
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+.input, .textarea {
+  width: 100%;
+  padding: 1rem 1.25rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+  color: #ffffff;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 200ms ease, background 200ms ease;
+  box-sizing: border-box;
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.input::placeholder, .textarea::placeholder {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.input:focus, .textarea:focus {
+  border-color: rgba(243, 206, 131, 0.5);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.passwordWrapper {
+  position: relative;
+}
+
+.togglePassword {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.35);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 0;
+  transition: color 200ms ease;
+}
+
+.togglePassword:hover {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Image Upload specific styles */
+.imageUploadGroup {
+  margin-bottom: 1.5rem;
+}
+
+.uploadLabel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 1rem;
+  border-radius: 12px;
+  border: 1px dashed rgba(243, 206, 131, 0.5);
+  background: rgba(243, 206, 131, 0.05);
+  color: rgb(243, 206, 131);
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 200ms ease;
+}
+
+.uploadLabel:hover {
+  background: rgba(243, 206, 131, 0.15);
+  border-color: rgb(243, 206, 131);
+}
+
+.fileInput {
+  display: none;
+}
+
+.imagePreviewContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.imagePreviewWrapper {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.imagePreview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.removeImageBtn {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 20px;
+  height: 20px;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/* Submit button */
+.registerBtn {
+  width: 100%;
+  padding: 0.95rem;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(
+    135deg,
+    rgb(243, 206, 131) 0%,
+    rgb(230, 190, 110) 100%
+  );
+  color: #0a0a0a;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 250ms ease;
+  margin-top: 0.5rem;
+  margin-bottom: 1.75rem;
+}
+
+.registerBtn:hover {
+  background: linear-gradient(
+    135deg,
+    rgb(250, 215, 145) 0%,
+    rgb(243, 206, 131) 100%
+  );
+  box-shadow: 0 8px 25px rgba(243, 206, 131, 0.25);
+  transform: translateY(-1px);
+}
+
+.registerBtn:active {
+  transform: translateY(0);
+}
+
+.registerBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Error message */
+.error {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 0.8rem;
+  color: rgb(252, 165, 165);
+  text-align: center;
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.footer a {
+  color: #ffffff;
+  font-weight: 700;
+  text-decoration: none;
+  transition: color 200ms ease;
+}
+
+.footer a:hover {
+  color: rgb(243, 206, 131);
+}

@@ -2,7 +2,7 @@
 // Export all shared types from this barrel file
 
 export type { ApiResponse, PaginatedResponse, ApiError } from "./api.types";
-export type { LoginRequest, RegisterRequest } from "./auth.types";
+export type { LoginRequest, RegisterRequest, PartnerRegisterRequest } from "./auth.types";
 export type {
   Gender,
   DrinkingHabit,
@@ -23,3 +23,9 @@ export type {
   MatchSchedule,
   MatchItem,
 } from "./match.types";
+export type {
+  PartnerCreateRequest,
+  PartnerImage,
+  PartnerResponse,
+  ImageUploadResponse,
+} from "./partner.types";
