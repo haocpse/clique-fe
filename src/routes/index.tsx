@@ -12,6 +12,8 @@ import NotFoundPage from "@/pages/NotFound";
 import ProtectedRoute from "@/components/common/ProtectedRoute";
 import GuestRoute from "@/components/common/GuestRoute";
 import PartnerRegister from "@/pages/PartnerRegister";
+import PartnerProfile from "@/pages/PartnerProfile";
+import AdminDashboard from "@/pages/AdminDashboard";
 
 export const router = createBrowserRouter([
   {
@@ -79,6 +81,22 @@ export const router = createBrowserRouter([
     element: (
       <ProtectedRoute>
         <MatchDetail />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/partner/me",
+    element: (
+      <ProtectedRoute>
+        <PartnerProfile />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/admin/dashboard",
+    element: (
+      <ProtectedRoute>
+        <AdminDashboard />
       </ProtectedRoute>
     ),
   },

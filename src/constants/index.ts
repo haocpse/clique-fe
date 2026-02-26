@@ -11,6 +11,8 @@ export const ROUTES = {
   PROFILE_EDIT: "/profile/edit",
   PROFILE_ME: "/profile/me",
   PARTNER_REGISTER: "/partner/register",
+  PARTNER_ME: "/partner/me",
+  ADMIN_DASHBOARD: "/admin/dashboard",
 } as const;
 
 export const API_ENDPOINTS = {

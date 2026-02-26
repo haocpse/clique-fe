@@ -103,6 +103,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setUser({
         id: userId,
         email: data.email,
+        role: "USER",
         photos: [],
       });
     }
@@ -119,6 +120,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setUser({
         id: userId,
         email: data.email,
+        role: "PARTNER",
         photos: [],
       });
     }

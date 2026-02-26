@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 import styles from "./PartnerRegister.module.css";
 import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
@@ -9,9 +9,10 @@ import { ROUTES } from "@/constants";
 
 const PartnerRegister = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { registerPartner } = useAuth();
 
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(location.state?.startStep || 1);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 

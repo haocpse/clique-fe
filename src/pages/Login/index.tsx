@@ -6,6 +6,7 @@ import Footer from "@/components/common/Footer";
 import { useAuth } from "@/hooks/useAuth";
 import { ROUTES } from "@/constants";
 import { userService } from "@/services/user.service";
+import { partnerService } from "@/services/partner.service";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -30,18 +31,42 @@ const Login = () => {
     try {
       await login({ email, password });
       const res = await userService.getMyProfile();
-      let ids: number[];
-      if (!res.data.data.profile) {
-        navigate(ROUTES.PROFILE_CREATE);
+      const userData = res.data.data;
+      localStorage.setItem("profile", JSON.stringify(userData));
+
+      if (userData.role === "ADMIN") {
+        navigate(ROUTES.ADMIN_DASHBOARD);
+        return;
       }
-      localStorage.setItem("profile", JSON.stringify(res.data.data));
-      if (!res.data.data.swipeOrder) {
+
+      if (userData.role === "PARTNER") {
+        try {
+          await partnerService.getPartnerMe();
+          navigate(ROUTES.PARTNER_ME);
+        } catch (partnerErr: any) {
+          if (partnerErr.response?.status === 404) {
+             navigate(ROUTES.PARTNER_REGISTER, { state: { startStep: 2 } });
+          } else {
+             setError("Failed to fetch partner info.");
+          }
+        }
+        return;
+      }
+
+      // Default USER role logic
+      let ids: number[];
+      if (!userData.profile) {
+        navigate(ROUTES.PROFILE_CREATE);
+        return;
+      }
+      
+      if (!userData.swipeOrder) {
         const swipeOrder = await userService.getSwipeOrder(
-          res.data.data.refreshSwipeTime!,
+          userData.refreshSwipeTime!,
         );
         ids = JSON.parse(swipeOrder.data.data);
       } else {
-        ids = JSON.parse(res.data.data.swipeOrder);
+        ids = JSON.parse(userData.swipeOrder);
       }
       localStorage.setItem("swipeOrder", JSON.stringify(ids));
       navigate(ROUTES.DISCOVER);
