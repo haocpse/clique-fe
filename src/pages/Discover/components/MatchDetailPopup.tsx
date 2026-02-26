@@ -35,6 +35,7 @@ const MatchDetailPopup = ({
     scheduledAt: "",
     location: "",
     message: "",
+    partnerId: undefined,
   });
   const [scheduleSaving, setScheduleSaving] = useState(false);
   const [scheduleError, setScheduleError] = useState("");
@@ -68,6 +69,7 @@ const MatchDetailPopup = ({
       scheduledAt: `${selectedDate}T12:00`,
       location: "",
       message: "",
+      partnerId: undefined,
     });
     setScheduleError("");
     setCancelScheduleItem(null);
@@ -84,6 +86,7 @@ const MatchDetailPopup = ({
       scheduledAt: localDt,
       location: schedule.location,
       message: schedule.message || "",
+      partnerId: schedule.partner?.id,
     });
     setScheduleError("");
     setCancelScheduleItem(null);
@@ -111,6 +114,7 @@ const MatchDetailPopup = ({
         scheduledAt: isoDate,
         location: scheduleForm.location,
         message: scheduleForm.message,
+        partnerId: scheduleForm.partnerId,
       };
 
       let updatedMatch: MatchItem;

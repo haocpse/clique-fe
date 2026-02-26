@@ -6,6 +6,7 @@ export interface ScheduleRequest {
   scheduledAt: string;
   location: string;
   message: string;
+  partnerId?: number;
 }
 
 export const matchService = {

@@ -2,11 +2,14 @@ import { useEffect, useState } from "react";
 import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
 import { partnerService } from "@/services/partner.service";
-import type { PartnerResponse } from "@/types";
+import type { PartnerResponse, MatchSchedule } from "@/types";
 
 const PartnerProfile = () => {
   const [partner, setPartner] = useState<PartnerResponse | null>(null);
   const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState<"profile" | "schedule">("profile");
+  const [schedules, setSchedules] = useState<MatchSchedule[]>([]);
+  const [schedulesLoading, setSchedulesLoading] = useState(false);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -25,6 +28,25 @@ const PartnerProfile = () => {
     fetchProfile();
   }, []);
 
+  useEffect(() => {
+    if (activeTab === "schedule") {
+      const fetchSchedules = async () => {
+        setSchedulesLoading(true);
+        try {
+          const res = await partnerService.getPartnerSchedules();
+          if (res.data?.data) {
+            setSchedules(res.data.data);
+          }
+        } catch (error) {
+          console.error("Failed to fetch partner schedules", error);
+        } finally {
+          setSchedulesLoading(false);
+        }
+      };
+      fetchSchedules();
+    }
+  }, [activeTab]);
+
   return (
     <>
       <Header />
@@ -33,8 +55,24 @@ const PartnerProfile = () => {
           <h1 className="text-3xl font-bold text-gold mb-2 italic">Partner Info</h1>
           <p className="text-white/50 mb-8">Manage your organization details here.</p>
           
-          <div className="text-white/90 p-6 border border-white/10 bg-white/5 rounded-xl text-left">
-            {loading ? (
+          <div className="flex space-x-4 mb-6">
+            <button 
+              className={`px-4 py-2 rounded-lg font-medium transition-colors ${activeTab === 'profile' ? 'bg-gold text-black' : 'bg-white/10 text-white/70 hover:bg-white/20'}`}
+              onClick={() => setActiveTab('profile')}
+            >
+              Profile
+            </button>
+            <button 
+              className={`px-4 py-2 rounded-lg font-medium transition-colors ${activeTab === 'schedule' ? 'bg-gold text-black' : 'bg-white/10 text-white/70 hover:bg-white/20'}`}
+              onClick={() => setActiveTab('schedule')}
+            >
+              Schedules
+            </button>
+          </div>
+
+          {activeTab === 'profile' && (
+            <div className="text-white/90 p-6 border border-white/10 bg-white/5 rounded-xl text-left">
+              {loading ? (
               <p className="text-center text-white/50">Loading profile...</p>
             ) : partner ? (
               <div className="space-y-6">
@@ -102,6 +140,35 @@ const PartnerProfile = () => {
               <p className="text-center text-white/50">No partner profile found.</p>
             )}
           </div>
+          )}
+
+          {activeTab === 'schedule' && (
+            <div className="text-white/90 p-6 border border-white/10 bg-white/5 rounded-xl text-left">
+              {schedulesLoading ? (
+                <p className="text-center text-white/50">Loading schedules...</p>
+              ) : schedules.length > 0 ? (
+                <div className="space-y-4">
+                  {schedules.map(schedule => (
+                    <div key={schedule.id} className="p-4 rounded-lg bg-black/40 border border-white/10 flex flex-col space-y-2">
+                       <div className="flex justify-between items-start">
+                         <div className="font-semibold text-gold">{new Date(schedule.scheduledAt).toLocaleString()}</div>
+                         <span className={`px-2 py-1 text-xs rounded-full font-semibold ${
+                           schedule.status === 'CONFIRMED' ? 'bg-green-500/20 text-green-400 border border-green-500/30' :
+                           schedule.status === 'CANCELLED' ? 'bg-red-500/20 text-red-400 border border-red-500/30' :
+                           schedule.status === 'COMPLETED' ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30' :
+                           'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30'
+                         }`}>{schedule.status}</span>
+                       </div>
+                       <div className="text-sm text-white/80"><span className="text-white/40">Location:</span> {schedule.location}</div>
+                       {schedule.message && <div className="text-sm text-white/80"><span className="text-white/40">Message:</span> {schedule.message}</div>}
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-center text-white/50">No schedules found.</p>
+              )}
+            </div>
+          )}
         </div>
       </div>
       <Footer />

@@ -1,4 +1,5 @@
 import type { UserResponse } from "./user.types";
+import type { PartnerResponse } from "./partner.types";
 
 export type ScheduleStatus =
   | "AUTO"
@@ -16,6 +17,7 @@ export interface MatchSchedule {
   cancelledById: number | null;
   cancelReason: string | null;
   isRequester: boolean;
+  partner?: PartnerResponse;
 }
 
 export interface MatchItem {

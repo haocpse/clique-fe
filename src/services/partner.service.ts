@@ -29,4 +29,7 @@ export const partnerService = {
 
   getPartnerById: (id: number) =>
     axiosClient.get<ApiResponse<PartnerResponse>>(`/partner/${id}`),
+
+  getPartnerSchedules: () =>
+    axiosClient.get<ApiResponse<import("@/types").MatchSchedule[]>>("/partner/schedule"),
 };
