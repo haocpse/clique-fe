@@ -30,3 +30,9 @@ export interface ImageUploadResponse {
   id: number;
   imageUrl: string;
 }
+
+export interface PartnerOverviewResponse {
+  pending: number;
+  approved: number;
+  rejected: number;
+}

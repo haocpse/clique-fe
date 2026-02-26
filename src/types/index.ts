@@ -28,4 +28,5 @@ export type {
   PartnerImage,
   PartnerResponse,
   ImageUploadResponse,
+  PartnerOverviewResponse,
 } from "./partner.types";

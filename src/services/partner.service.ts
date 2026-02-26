@@ -17,4 +17,16 @@ export const partnerService = {
       },
     });
   },
+
+  getAllPartners: () =>
+    axiosClient.get<ApiResponse<PartnerResponse[]>>("/partner"),
+
+  getPartnerOverview: () =>
+    axiosClient.get<ApiResponse<import("@/types").PartnerOverviewResponse>>("/partner/over-view"),
+
+  updatePartnerStatus: (id: number, action: "Approve" | "Reject") =>
+    axiosClient.put<ApiResponse<PartnerResponse>>(`/partner/${id}?action=${action}`),
+
+  getPartnerById: (id: number) =>
+    axiosClient.get<ApiResponse<PartnerResponse>>(`/partner/${id}`),
 };
