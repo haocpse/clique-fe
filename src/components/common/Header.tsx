@@ -43,7 +43,7 @@ const Header = () => {
           </h2>
         </Link>
 
-        {user && (
+        {user && user?.role !== "ADMIN" && user?.role !== "PARTNER" && (
           <nav className="hidden md:flex gap-6">
             <Link
               to="/discover"
@@ -97,15 +97,41 @@ const Header = () => {
               {/* Dropdown */}
               {open && (
                 <div className="absolute right-0 mt-3 w-44 rounded-xl bg-black/90 backdrop-blur border border-white/10 shadow-xl overflow-hidden">
-                  <button
-                    onClick={() => {
-                      navigate("/profile/me");
-                      setOpen(false);
-                    }}
-                    className="w-full px-4 py-2.5 text-left text-sm text-white hover:bg-white/10 transition"
-                  >
-                    Profile
-                  </button>
+                  {user?.role === "ADMIN" && (
+                    <button
+                      onClick={() => {
+                        navigate("/admin/dashboard");
+                        setOpen(false);
+                      }}
+                      className="w-full px-4 py-2.5 text-left text-sm text-white hover:bg-white/10 transition"
+                    >
+                      Admin Dashboard
+                    </button>
+                  )}
+
+                  {user?.role === "PARTNER" && (
+                    <button
+                      onClick={() => {
+                        navigate("/partner/me");
+                        setOpen(false);
+                      }}
+                      className="w-full px-4 py-2.5 text-left text-sm text-white hover:bg-white/10 transition"
+                    >
+                      Partner Profile
+                    </button>
+                  )}
+
+                  {(!user?.role || user?.role === "USER") && (
+                    <button
+                      onClick={() => {
+                        navigate("/profile/me");
+                        setOpen(false);
+                      }}
+                      className="w-full px-4 py-2.5 text-left text-sm text-white hover:bg-white/10 transition"
+                    >
+                      Profile
+                    </button>
+                  )}
 
                   <button
                     onClick={handleLogout}

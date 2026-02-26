@@ -3,7 +3,8 @@ import type { MatchSchedule } from "@/types";
 import type { ScheduleRequest } from "@/services/match.service";
 import { partnerService } from "@/services/partner.service";
 import type { PartnerResponse } from "@/types";
-
+import { getImageUrl } from "@/utils/profile";
+import Lightbox from "@/components/ui/Lightbox";
 interface ScheduleFormProps {
   editingSchedule: MatchSchedule | null;
   scheduleForm: ScheduleRequest;
@@ -27,6 +28,8 @@ const ScheduleForm = ({
 }: ScheduleFormProps) => {
   const [partners, setPartners] = useState<PartnerResponse[]>([]);
   const [showPartnerDetails, setShowPartnerDetails] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState(-1);
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
 
   useEffect(() => {
     const fetchPartners = async () => {
@@ -134,14 +137,7 @@ const ScheduleForm = ({
           
           {selectedPartner && (
             <div className={styles.partnerPreview} style={{ marginTop: "1rem", padding: "1rem", backgroundColor: "rgba(255, 255, 255, 0.05)", borderRadius: "12px", border: "1px solid rgba(243, 206, 131, 0.2)" }}>
-              <div style={{ display: "flex", gap: "1rem" }}>
-                {selectedPartner.images && selectedPartner.images.length > 0 && (
-                  <img 
-                    src={selectedPartner.images[0].imageUrl} 
-                    alt={selectedPartner.organizationName} 
-                    style={{ width: "80px", height: "80px", objectFit: "cover", borderRadius: "8px", border: "1px solid rgba(255,255,255,0.1)" }}
-                  />
-                )}
+              <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
                 <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center" }}>
                   <h4 style={{ margin: "0 0 0.5rem", color: "#f3ce83", fontSize: "1rem", fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
                     {selectedPartner.organizationName}
@@ -161,6 +157,28 @@ const ScheduleForm = ({
               </div>
               {showPartnerDetails && (
                 <div style={{ marginTop: "1rem", paddingTop: "1rem", borderTop: "1px solid rgba(255,255,255,0.1)", fontSize: "0.85rem", color: "rgba(255,255,255,0.8)", display: "flex", flexDirection: "column", gap: "0.5rem", fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+                  {selectedPartner.images && selectedPartner.images.length > 0 && (
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(120px, 1fr))", gap: "0.5rem", marginBottom: "0.5rem" }}>
+                      {selectedPartner.images.map((img, index) => (
+                        <div 
+                          key={img.id} 
+                          style={{ width: "100%", height: "120px", borderRadius: "8px", overflow: "hidden", border: "1px solid rgba(255,255,255,0.1)", display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: "rgba(0,0,0,0.2)", cursor: "pointer" }}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            e.preventDefault();
+                            setLightboxIndex(index);
+                            setIsLightboxOpen(true);
+                          }}
+                        >
+                          <img 
+                            src={getImageUrl(img.imageUrl)} 
+                            alt={`Gallery ${img.id}`} 
+                            style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain" }}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  )}
                   {selectedPartner.description && <p style={{ margin: 0 }}><strong>Description:</strong> {selectedPartner.description}</p>}
                   {selectedPartner.phone && <p style={{ margin: 0 }}><strong>Phone:</strong> {selectedPartner.phone}</p>}
                   {selectedPartner.website && (
@@ -207,6 +225,22 @@ const ScheduleForm = ({
           </button>
         </div>
       </div>
+
+      {isLightboxOpen && selectedPartner && selectedPartner.images && (
+        <Lightbox
+          photos={selectedPartner.images.map((img, index) => ({ id: img.id, photoUrl: img.imageUrl, isPrimary: false, displayOrder: index }))}
+          activeIndex={lightboxIndex}
+          onClose={(e?: React.MouseEvent) => {
+            if (e) {
+              e.stopPropagation();
+              e.preventDefault();
+            }
+            setIsLightboxOpen(false);
+          }}
+          onNavigate={(index) => setLightboxIndex(index)}
+          styles={styles}
+        />
+      )}
     </div>
   );
 };

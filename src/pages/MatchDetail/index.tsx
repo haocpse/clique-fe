@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import type { MatchItem, MatchSchedule } from "@/types";
 import type { ScheduleRequest } from "@/services/match.service";
 import { matchService } from "@/services/match.service";
@@ -13,8 +13,6 @@ import styles from "./MatchDetail.module.css";
 
 const MatchDetail = () => {
   const { id } = useParams<{ id: string }>();
-  const location = useLocation();
-  const match = location.state?.match;
   const navigate = useNavigate();
 
   const [detailMatch, setDetailMatch] = useState<MatchItem | null>(null);
@@ -50,8 +48,8 @@ const MatchDetail = () => {
     setLoading(true);
     setError("");
     try {
-      const res = match;
-      setDetailMatch(res);
+      const res = await matchService.getMatchById(Number(id));
+      setDetailMatch(res.data.data);
     } catch {
       setError("Failed to load match detail.");
     } finally {

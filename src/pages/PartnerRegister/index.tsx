@@ -6,6 +6,7 @@ import Footer from "@/components/common/Footer";
 import { useAuth } from "@/hooks/useAuth";
 import { partnerService } from "@/services/partner.service";
 import { ROUTES } from "@/constants";
+import { getImageUrl } from "@/utils/profile";
 
 const PartnerRegister = () => {
   const navigate = useNavigate();
@@ -75,8 +76,17 @@ const PartnerRegister = () => {
     }
   };
 
-  const removeImage = (indexToRemove: number) => {
-    setImages((prev) => prev.filter((_, idx) => idx !== indexToRemove));
+  const removeImage = async (indexToRemove: number) => {
+    const imgToRemove = images[indexToRemove];
+    setLoading(true);
+    try {
+      await partnerService.deleteImage(imgToRemove.id);
+      setImages((prev) => prev.filter((_, idx) => idx !== indexToRemove));
+    } catch (err: any) {
+      setError(err.response?.data?.message || "Failed to delete image.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handlePartnerSubmit = async (e: React.FormEvent) => {
@@ -252,7 +262,7 @@ const PartnerRegister = () => {
                 <div className={styles.imagePreviewContainer}>
                   {images.map((img, idx) => (
                     <div key={img.id} className={styles.imagePreviewWrapper}>
-                      <img src={img.url} alt="preview" className={styles.imagePreview} />
+                      <img src={getImageUrl(img.url)} alt="preview" className={styles.imagePreview} />
                       <button type="button" className={styles.removeImageBtn} onClick={() => removeImage(idx)}>
                         &times;
                       </button>

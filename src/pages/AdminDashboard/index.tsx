@@ -3,6 +3,7 @@ import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
 import { partnerService } from "@/services/partner.service";
 import type { PartnerResponse, PartnerOverviewResponse } from "@/types";
+import { getImageUrl } from "@/utils/profile";
 
 const AdminDashboard = () => {
   const [partners, setPartners] = useState<PartnerResponse[]>([]);
@@ -38,14 +39,14 @@ const AdminDashboard = () => {
     fetchData();
   }, []);
 
-  const handleAction = async (id: number, action: "Approve" | "Reject") => {
+  const handleAction = async (id: number, action: "approve" | "reject") => {
     try {
       await partnerService.updatePartnerStatus(id, action);
       // Refresh data
       fetchData();
       // Also update selected partner status if modal is open
       if (selectedPartner && selectedPartner.id === id) {
-        setSelectedPartner({ ...selectedPartner, status: action === 'Approve' ? 'APPROVED' : 'REJECTED' });
+        setSelectedPartner({ ...selectedPartner, status: action === 'approve' ? 'approve' : 'reject' });
       }
     } catch (error) {
       console.error(`Failed to ${action} partner`, error);
@@ -127,13 +128,13 @@ const AdminDashboard = () => {
                       {(!partner.status || partner.status === 'PENDING') && (
                         <>
                           <button
-                            onClick={() => handleAction(partner.id, "Approve")}
+                            onClick={() => handleAction(partner.id, "approve")}
                             className="px-4 py-2 bg-green-500/20 text-green-400 border border-green-500/30 rounded-lg hover:bg-green-500/30 transition-colors"
                           >
                             Approve
                           </button>
                           <button
-                            onClick={() => handleAction(partner.id, "Reject")}
+                            onClick={() => handleAction(partner.id, "reject")}
                             className="px-4 py-2 bg-red-500/20 text-red-400 border border-red-500/30 rounded-lg hover:bg-red-500/30 transition-colors"
                           >
                             Reject
@@ -223,7 +224,7 @@ const AdminDashboard = () => {
                         {selectedPartner.images.map((img) => (
                           <div key={img.id} className="aspect-square rounded-lg overflow-hidden border border-white/10 relative group">
                             <img 
-                              src={img.imageUrl} 
+                              src={getImageUrl(img.imageUrl)} 
                               alt={`Gallery ${img.id}`} 
                               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                               onError={(e) => {
@@ -240,13 +241,13 @@ const AdminDashboard = () => {
                   {(!selectedPartner.status || selectedPartner.status === 'PENDING') && (
                     <div className="flex justify-end gap-4 pt-6 mt-6 border-t border-white/10">
                       <button
-                        onClick={() => handleAction(selectedPartner.id, "Reject")}
+                        onClick={() => handleAction(selectedPartner.id, "reject")}
                         className="px-6 py-2.5 bg-red-500/20 text-red-500 border border-red-500/30 rounded-xl hover:bg-red-500/30 transition-colors font-medium"
                       >
                         Reject Partner
                       </button>
                       <button
-                        onClick={() => handleAction(selectedPartner.id, "Approve")}
+                        onClick={() => handleAction(selectedPartner.id, "approve")}
                         className="px-6 py-2.5 bg-green-500/20 text-green-500 border border-green-500/30 rounded-xl hover:bg-green-500/30 transition-colors font-medium"
                       >
                         Approve Partner

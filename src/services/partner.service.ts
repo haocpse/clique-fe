@@ -24,7 +24,7 @@ export const partnerService = {
   getPartnerOverview: () =>
     axiosClient.get<ApiResponse<import("@/types").PartnerOverviewResponse>>("/partner/over-view"),
 
-  updatePartnerStatus: (id: number, action: "Approve" | "Reject") =>
+  updatePartnerStatus: (id: number, action: "approve" | "reject") =>
     axiosClient.put<ApiResponse<PartnerResponse>>(`/partner/${id}?action=${action}`),
 
   getPartnerById: (id: number) =>
@@ -32,4 +32,10 @@ export const partnerService = {
 
   getPartnerSchedules: () =>
     axiosClient.get<ApiResponse<import("@/types").MatchSchedule[]>>("/partner/schedule"),
+
+  deleteImage: (id: number) =>
+    axiosClient.delete<ApiResponse<null>>(`/partner/images/${id}`),
+
+  updatePartner: (id: number, data: Partial<PartnerCreateRequest>) =>
+    axiosClient.put<ApiResponse<PartnerResponse>>(`/partner/${id}/update`, data),
 };

@@ -4,7 +4,7 @@ import { getImageUrl } from "@/utils/profile";
 interface LightboxProps {
   photos: UserPhoto[];
   activeIndex: number;
-  onClose: () => void;
+  onClose: (e?: React.MouseEvent) => void;
   onNavigate: (index: number) => void;
   styles: Record<string, string>;
 }
@@ -19,8 +19,8 @@ const Lightbox = ({
   if (!photos[activeIndex]) return null;
 
   return (
-    <div className={styles.lightbox} onClick={onClose}>
-      <button className={styles.lightboxClose} onClick={onClose}>
+    <div className={styles.lightbox} onClick={(e) => { e.stopPropagation(); onClose(e); }}>
+      <button className={styles.lightboxClose} onClick={(e) => { e.stopPropagation(); onClose(e); }}>
         ✕
       </button>
       {photos.length > 1 && (
